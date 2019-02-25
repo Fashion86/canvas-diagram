@@ -1,0 +1,15 @@
+
+
+//diagram css
+#myDiagramDiv {
+  width: 100%;
+  height: 650px;
+  border: 1px solid black;
+}
+#myDiagramDiv canvas:focus{
+  outline:none !important;
+  border-color: red !important;
+}
+div{
+  border-color: red !important;
+}

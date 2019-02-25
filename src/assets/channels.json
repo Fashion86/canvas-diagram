@@ -1,0 +1,29 @@
+{
+  "channels": [
+    {
+      "id": 1,
+      "type": "face book?",
+      "connection": "China"
+    },
+    {
+      "id": 2,
+      "type": "Google",
+      "connection": "1945"
+    },
+    {
+      "id": 3,
+      "type": "local",
+      "connection": "China"
+    },
+    {
+      "id": 4,
+      "type": "Linked In",
+      "connection": "Atlanta"
+    },
+    {
+      "id": 5,
+      "type": "Database",
+      "connection": "Alexander Graham Bell"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+<app-header></app-header>
+<div class="container">
+  <h3>Channels ({{channels?.length}})</h3>
+  <div class="add-data">
+    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Channel</button>
+    <div *ngIf="channels?.length>0" class="searchbar input-group col-sm-4">
+      <input class="form-control" type="text" placeholder="Filter by Channel Type..." (keydown)="searchChannel($event)" [(ngModel)]="searchstr">
+      <span class="input-group-addon"><i class="fa fa-search"></i></span>
+    </div>
+  </div>
+  <div class="table-group table-responsive table-bordered">
+    <table id="reports-table" class="table table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Type</th>
+        <th>Connection</th>
+        <th colspan="2">Options</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let channel of channels; let i = index">
+        <td>
+          {{channel.type}}
+        </td>
+        <td>
+          {{channel.connection}}
+        </td>
+        <td>
+          <a (click)="editData(channel)">
+            <i class="fa fa-pencil"></i>
+          </a>
+        </td>
+        <td>
+          <a style="color: red" (click)="deleteData(channel)">
+            <i class="fa fa-trash-o"></i>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="pagination-wrapper">
+      <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+    </div>
+  </div>
+</div>
+
+<!-- edit dialog-->
+<ngx-smart-modal #editModal identifier="editModal" [dismissable]="false">
+  <div class="dg-heaser">
+    <h3>
+      <span *ngIf="editChannel.id">Edit Channel</span>
+      <span *ngIf="!editChannel.id">Create Channel</span>
+    </h3>
+  </div>
+  <div class="dg-body">
+    <form class="form-horizontal" #form="ngForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label class="control-label col-sm-3">Type</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editChannel.type" placeholder="Type" name="type" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Connection</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editChannel.connection" placeholder="Connection" name="connection" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="control-btn">
+          <button *ngIf="editChannel.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form.form.invalid">Update
+          </button>
+          <button *ngIf="!editChannel.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form.form.invalid">Create
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="editModal.close()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ngx-smart-modal>
+
+<!-- delete dialog-->
+<ngx-smart-modal #deleteModal identifier="deleteModal" [dismissable]="false">
+  <div class="dg-heaser">
+    <h3>
+      <span>Confirmation</span>
+    </h3>
+  </div>
+  <div class="dg-body">
+    <h4><i class="fa fa-warning"></i> Are you sure delete this Channel?</h4>
+  </div>
+  <div class="form-group">
+    <div class="control-btn">
+      <button type="button" class="btn btn-success btn-md btn-right" (click)="onDelete()">Yes
+      </button>
+      <button type="button" class="btn btn-primary btn-md btn-right" (click)="deleteModal.close()">No</button>
+    </div>
+  </div>
+</ngx-smart-modal>

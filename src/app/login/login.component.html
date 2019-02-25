@@ -1,0 +1,58 @@
+<nav class="navbar navbar-inverse navbar-expand-xl navbar-dark">
+	<div class="navbar-header d-flex col">
+		<a class="navbar-brand" href="#"><i class="fa fa-cube"></i>Project<b>Name</b></a>  		
+		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle navbar-toggler ml-auto">
+			<span class="navbar-toggler-icon"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+	</div>
+	<!-- Collection of nav links, forms, and other content for toggling -->
+	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">		
+			<!-- <form class="navbar-form form-inline">
+				<div class="input-group search-box">								
+					<input type="text" id="search" class="form-control" placeholder="Search here...">
+					<span class="input-group-addon"><i class="material-icons">&#xE8B6;</i></span>
+				</div>
+			</form> -->
+			<ul class="nav navbar-nav navbar-right ml-auto">
+				<div class="header_buttons">
+				<a href="/login"><button type="button" class="btn btn-primary">Login</button></a>
+				<a href="/register"><button type="button" class="btn btn-success">Register</button></a>
+			</div>
+			</ul>
+		</div>
+</nav>
+
+<h1 class="header">Login with Firebase</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <form [formGroup]="loginForm">
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" formControlName="email" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" formControlName="password">
+          <label class="error">{{errorMessage}}</label>
+        </div>
+        <button type="submit" (click)="tryLogin(loginForm.value)" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <button type="button" class="btn btn-danger btn-block" (click)="tryGoogleLogin()">Login with Google</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <p>No account yet? <a href="/register">Create an account</a></p>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,142 @@
+{
+  "objects": [
+    {
+      "id": 1,
+      "name": "object1",
+      "value": "===",
+      "attributes": [
+        {
+          "name": "Attribute1",
+          "value": "A1",
+          "attribute": {
+            "name": "AttributeType1",
+            "operations": [
+              {
+                "name": "oper1",
+                "symbol": "+",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "oper",
+                "symbol": "-",
+                "functionName": "fuc12"
+              }
+            ],
+            "conditions": [
+              {
+                "name": "con1",
+                "symbol": "+",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "con2",
+                "symbol": "-",
+                "functionName": "fuc12"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Attribute2",
+          "value": "A2",
+          "attribute": {
+            "name": "AttributeType2",
+            "operations": [
+              {
+                "name": "oper1",
+                "symbol": "#",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "oper",
+                "symbol": "$",
+                "functionName": "fuc12"
+              }
+            ],
+            "conditions": [
+              {
+                "name": "con1",
+                "symbol": "5",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "con2",
+                "symbol": "@",
+                "functionName": "fuc12"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "object2",
+      "value": "+++",
+      "attributes": [
+        {
+          "name": "Attribute3",
+          "value": "A3",
+          "attribute": {
+            "name": "AttributeType3",
+            "operations": [
+              {
+                "name": "oper1",
+                "symbol": "*",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "oper",
+                "symbol": "&",
+                "functionName": "fuc12"
+              }
+            ],
+            "conditions": [
+              {
+                "name": "con1",
+                "symbol": "+",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "con2",
+                "symbol": "-",
+                "functionName": "fuc12"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Attribute2",
+          "value": "A2",
+          "attribute": {
+            "name": "AttributeType2",
+            "operations": [
+              {
+                "name": "oper1",
+                "symbol": "#",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "oper",
+                "symbol": "$",
+                "functionName": "fuc12"
+              }
+            ],
+            "conditions": [
+              {
+                "name": "con1",
+                "symbol": "5",
+                "functionName": "fuc11"
+              },
+              {
+                "name": "con2",
+                "symbol": "@",
+                "functionName": "fuc12"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

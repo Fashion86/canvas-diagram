@@ -1,0 +1,26 @@
+.navbar {
+  color: #fff;
+  background: #926dde;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+.navbar-brand {
+  color: #fff;
+}
+.user-pic {
+  padding: 5px 5px !important;
+  img {
+    width: 40px;
+    border-radius: 50%;
+  }
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #f3e8e8 !important;
+}
+.navbar-inverse .navbar-nav > li > a:hover {
+  color: #fff !important;
+}
+.dropdown-menu > li > a {
+  cursor: pointer !important;
+}

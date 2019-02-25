@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+//$color-overlay: rgba(0, 0, 0, .7);
+//$dialog-position-top: 300px;
+@import "~ngx-smart-modal/ngx-smart-modal";
+.nsm-content {
+  margin-top: 200px !important;
+}
+.container {
+  .add-data {
+    margin: 5px 0;
+    display: flex;
+    button {
+      margin-right: 5px;
+    }
+  }
+}
+.control-btn {
+  float: right;
+  margin-top: 10px;
+  margin-right: 15px;
+}
+.dg-heaser {
+  border-bottom: 1px solid #d4cfcf;
+}
+.dg-body {
+  text-align: center;
+  margin-top: 20px;
+}
+a:hover {
+  cursor: pointer;
+}
