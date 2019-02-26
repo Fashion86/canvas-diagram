@@ -7,23 +7,35 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseUserModel } from '../core/datamodel/user.model';
 import * as go from 'gojs'
 import {ChannelService} from '../core/services/channel.service';
+import {AnswerService} from '../core/services/answer.service';
+import {QuestionService} from '../core/services/question.service';
 import {ChannelModel} from '../core/datamodel/channel.model';
+import {AnswerModel} from '../core/datamodel/answer.model';
+import {QuestionModel} from '../core/datamodel/question.model';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
 @Component({
   selector: 'page-user',
   templateUrl: 'user.component.html',
   styleUrls: ['user.scss']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, AfterViewInit {
   user: FirebaseUserModel = new FirebaseUserModel();
   profileForm: FormGroup;
   channels: ChannelModel[] = [];
+  answers: AnswerModel[] = [];
+  questions: QuestionModel[] = [];
+  editQuestion: QuestionModel;
+  editAnswer: AnswerModel;
   constructor(
     public userService: UserService,
     public authService: AuthService,
     private route: ActivatedRoute,
     private location: Location,
-    private channelAPI: ChannelService
+    private channelAPI: ChannelService,
+    public modalService: NgxSmartModalService,
+    private answerAPI: AnswerService,
+    private questionAPI: QuestionService
   ) {
     this.channelAPI.getChannelList().subscribe(
       res => {
@@ -42,7 +54,11 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.editAnswer = new AnswerModel();
+    this.editQuestion = new QuestionModel();
 
+  }
+  ngAfterViewInit(): void {
     var $ = go.GraphObject.make;
     var myDiagram = $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
       {
@@ -51,38 +67,30 @@ export class UserComponent implements OnInit {
         initialDocumentSpot: go.Spot.TopCenter,
         initialViewportSpot: go.Spot.TopCenter,
         layout:
-            $(go.TreeLayout,  // use a TreeLayout to position all of the nodes
-              {
-                treeStyle: go.TreeLayout.StyleLastParents,
-                // properties for most of the tree:
-                angle: 90,
-                layerSpacing: 80,
-                // properties for the "last parents":
-                alternateAngle: 0,
-                alternateAlignment: go.TreeLayout.AlignmentStart,
-                alternateNodeIndent: 20,
-                alternateNodeIndentPastParent: 1,
-                alternateNodeSpacing: 20,
-                alternateLayerSpacing: 40,
-                alternateLayerSpacingParentOverlap: 1,
-                alternatePortSpot: new go.Spot(0.001, 1, 20, 0),
-                alternateChildPortSpot: go.Spot.Left
-              }),
+          $(go.TreeLayout,  // use a TreeLayout to position all of the nodes
+            {
+              treeStyle: go.TreeLayout.StyleLastParents,
+              // properties for most of the tree:
+              angle: 90,
+              layerSpacing: 80,
+              // properties for the "last parents":
+              alternateAngle: 0,
+              alternateAlignment: go.TreeLayout.AlignmentStart,
+              alternateNodeIndent: 20,
+              alternateNodeIndentPastParent: 1,
+              alternateNodeSpacing: 20,
+              alternateLayerSpacing: 40,
+              alternateLayerSpacingParentOverlap: 1,
+              alternatePortSpot: new go.Spot(0.001, 1, 20, 0),
+              alternateChildPortSpot: go.Spot.Left
+            }),
         "toolManager.mouseWheelBehavior": go.ToolManager.WheelZoom,  // the user cannot select any part,
       });
 
-    // myDiagram.model = new go.GraphLinksModel(
-    //   [
-    //     {key: 1, choices: this.channels, loc: new go.Point(250,150) },
-    //     {key: 2, choices: this.channels, loc: new go.Point(50,50) }
-    //   ],
-    //   [
-    //     { from: 1, to: 2 }
-    //   ]);
 
     // define a function named "addChild" that is invoked by a button click
-    const addChild = function (e, obj) {
-
+    const addChild = (e, obj) => {
+      this.onCreateAnswer();
       //obj.part.node.select;
       var selnode = myDiagram.selection.first();
 
@@ -93,9 +101,7 @@ export class UserComponent implements OnInit {
       selnode.isHighlighted = false;
       if (!(selnode instanceof go.Node)) return;
 
-      console.log(selnode);
-      myDiagram.commit(function (d: any) {
-
+      myDiagram.commit((d: any) => {
         // have the Model add a new node data
         var newnode;
         if (selnode.data.type == "question")
@@ -115,6 +121,7 @@ export class UserComponent implements OnInit {
     myDiagram.animationManager.isEnabled = false;
     //myDiagram.focus("null");
 
+    myDiagram.model.set(myDiagram.model.modelData, "choices", ["one", "two", "three"]);
 
     var answerTemplate =
       $(go.Node, "Auto",
@@ -126,6 +133,14 @@ export class UserComponent implements OnInit {
             new go.Binding("text", "expression")),
           $(go.TextBlock, { margin: 2, editable: true },
             new go.Binding("text", "feedback")),
+          // $(go.TextBlock,
+          //   { text: "Channels",
+          //     editable: true,
+          //     font: "10pt Georgia, serif",
+          //     // areaBackground: "orangered",
+          //     // textEditor: selectbox,
+          //     scale: 1 },
+          //   new go.Binding("choices")),
           $("Button", { margin: 2, click: addChild },
             $(go.TextBlock, " + Add a question"))))
 
@@ -160,10 +175,10 @@ export class UserComponent implements OnInit {
     var linkDataArray = [
       { from: "Alpha", to: "Beta" }
     ];
-        // create the Overview and initialize it to show the main Diagram
-        var myOverview =
-        $(go.Overview, "myOverviewDiv",
-          { observed: myDiagram,contentAlignment: go.Spot.Center });
+    // create the Overview and initialize it to show the main Diagram
+    var myOverview =
+      $(go.Overview, "myOverviewDiv",
+        { observed: myDiagram,contentAlignment: go.Spot.Center });
     myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
 
     myDiagram.model.undoManager.isEnabled = true;
@@ -181,7 +196,6 @@ export class UserComponent implements OnInit {
       myDiagram.commandHandler.resetZoom();
     });
   }
-
   logout() {
     this.authService.doLogout()
       .then((res) => {
@@ -191,4 +205,17 @@ export class UserComponent implements OnInit {
       });
   }
 
+  onCreateAnswer() {
+    this.editAnswer = new AnswerModel();
+    this.modalService.getModal('editModal_A').open(false);
+  }
+
+  onCreateQuestion() {
+    this.editQuestion = new QuestionModel();
+    this.modalService.getModal('editModal_Q').open(false);
+  }
+
+  onSubmit() {
+
+  }
 }

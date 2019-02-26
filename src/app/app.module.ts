@@ -18,6 +18,8 @@ import { AuthService } from './core/auth.service';
 import { UserService } from './core/services/user.service';
 import { ChannelService } from './core/services/channel.service';
 import { ModelService } from './core/services/model.service';
+import { AnswerService } from './core/services/answer.service';
+import { QuestionService } from './core/services/question.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
@@ -57,7 +59,8 @@ import { AttributeComponent } from './object/attribute/attribute.component';
   //   MatCardModule,
   //   BrowserAnimationsModule
   // ],
-  providers: [AuthService, UserService, UserResolver, AuthGuard, ChannelService, ModelService],
+  providers: [AuthService, UserService, UserResolver, AuthGuard, ChannelService,
+    ModelService, AnswerService, QuestionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

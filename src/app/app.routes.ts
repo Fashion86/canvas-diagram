@@ -18,7 +18,8 @@ export const rootRouterConfig: Routes = [
   { path: 'user', component: UserComponent},
   { path: 'channel', component: ChannelComponent, data: { title: 'Channel'}},
   { path: 'model', component: ObjectComponent, data: { title: 'Model'}},
-  { path: 'model/:id/attributes', component: AttributeComponent, data: { title: 'Model Attributes'}}
+  { path: 'model/:id/attributes', component: AttributeComponent, data: { title: 'Model Attributes'}},
+  { path: '**',  redirectTo: "/login", pathMatch: 'full'}
 ];
 
 @NgModule({
