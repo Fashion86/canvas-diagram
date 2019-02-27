@@ -53,7 +53,7 @@
 		</h3>
 	</div>
 	<div class="dg-body">
-		<form class="form-horizontal" #form="ngForm" (ngSubmit)="addQuestion()">
+		<form class="form-horizontal" #form1="ngForm" (ngSubmit)="addQuestion()">
 			<!--<div class="form-group">-->
 			<!--<label class="control-label col-sm-3">Type</label>-->
 			<!--<div class="col-sm-9 right-div">-->
@@ -69,11 +69,37 @@
 			<div class="form-group">
 				<div class="control-btn">
 					<button type="submit" class="btn btn-primary btn-md btn-right"
-							[disabled]="form.form.invalid">Create
+							[disabled]="form1.form.invalid">Create
 					</button>
 					<button type="button" class="btn btn-default btn-md btn-right" (click)="editModal_Q.close()">Cancel</button>
 				</div>
 			</div>
 		</form>
+	</div>
+</ngx-smart-modal>
+
+<!-- detailModal dialog-->
+<ngx-smart-modal #detailModal identifier="detailModal" [dismissable]="false">
+	<div class="dg-heaser">
+		<h3>
+			<span>Detail</span>
+		</h3>
+	</div>
+	<div style="margin-left: 50px; margin-top: 20px">
+		<div>
+			<span>KEY:  <strong>{{obj?.data?.key}}</strong></span>
+		</div>
+		<div>
+			<span>NAME:  <strong>{{obj?.data?.name}}</strong></span>
+		</div>
+		<div>
+			<span>TYPE:  <strong>{{obj?.data?.type}}</strong></span>
+		</div>
+		<div>
+			<span>CATEGORY:  <strong>{{obj?.data?.category}}</strong></span>
+		</div>
+		<div class="control-btn">
+			<button type="button" class="btn btn-default btn-md btn-right" (click)="detailModal.close()">Close</button>
+		</div>
 	</div>
 </ngx-smart-modal>

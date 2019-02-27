@@ -44,7 +44,7 @@ export class ChannelComponent implements OnInit {
   }
 
   searchChannel(event) {
-
+      console.log(this.searchstr)
   }
   onCreate() {
     this.editChannel = new ChannelModel();

@@ -4,7 +4,7 @@
   <div class="add-data">
     <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Channel</button>
     <div *ngIf="channels?.length>0" class="searchbar input-group col-sm-4">
-      <input class="form-control" type="text" placeholder="Filter by Channel Type..." (keydown)="searchChannel($event)" [(ngModel)]="searchstr">
+      <input class="form-control" type="text" placeholder="Filter by Channel Type..." (change)="searchChannel($event)" [(ngModel)]="searchstr">
       <span class="input-group-addon"><i class="fa fa-search"></i></span>
     </div>
   </div>

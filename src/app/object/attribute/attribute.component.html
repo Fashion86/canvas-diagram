@@ -1,12 +1,8 @@
 <app-header></app-header>
 <div class="container">
-  <h3><a routerLink="/model">{{object?.name}}</a> > Attributes ({{attributes?.length}})</h3>
+  <h3><a routerLink="/model">Object</a> > Attributes ({{attributes?.length}})</h3>
   <div class="add-data">
-    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Object</button>
-    <div *ngIf="attributes?.length>0" class="searchbar input-group col-sm-4">
-      <input class="form-control" type="text" placeholder="Search by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">
-      <span class="input-group-addon"><i class="fa fa-search"></i></span>
-    </div>
+    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Attribute</button>
   </div>
   <div class="table-group table-responsive table-bordered">
     <table id="reports-table" class="table table-hover table-striped">
@@ -14,7 +10,6 @@
       <tr>
         <th>Name</th>
         <th>Value</th>
-        <th>Attributes</th>
         <th colspan="2">Options</th>
       </tr>
       </thead>
@@ -25,9 +20,6 @@
         </td>
         <td>
           {{attribute.value}}
-        </td>
-        <td>
-          <a (click)="goAttributes(attribute)">View Attributes</a>
         </td>
         <td>
           <a (click)="editData(attribute)">
@@ -52,8 +44,8 @@
 <ngx-smart-modal #editModal identifier="editModal" [dismissable]="false">
   <div class="dg-heaser">
     <h3>
-      <span *ngIf="editAttribute.id">Edit Object</span>
-      <span *ngIf="!editAttribute.id">Create Object</span>
+      <span *ngIf="editAttribute.id">Edit Attribute</span>
+      <span *ngIf="!editAttribute.id">Create Attribute</span>
     </h3>
   </div>
   <div class="dg-body">

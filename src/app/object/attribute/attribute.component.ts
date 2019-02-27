@@ -21,16 +21,16 @@ export class AttributeComponent implements OnInit {
               public modalService: NgxSmartModalService) {
     this.activatedRoute.params.subscribe(params => {
       if (params['id']) {
-            this.objectAPI.getObjectByID(params['id']).subscribe(
-              res => {
-                this.object = res['object'];
-              },
-              error => {
-                console.log(error);
-                alert('Unable to fetch object data');
-              }
-            );
-            this.getAttributeList(params['id']);
+            // this.objectAPI.getObjectByID(params['id']).subscribe(
+            //   res => {
+            //     this.object = res['object'];
+            //   },
+            //   error => {
+            //     console.log(error);
+            //     alert('Unable to fetch object data');
+            //   }
+            // );
+            // this.getAttributeList(params['id']);
       }
     });
   }
@@ -66,7 +66,7 @@ export class AttributeComponent implements OnInit {
   }
 
   editData(attribute) {
-    this.editAttribute = attribute;
+    this.editAttribute = Object.assign({}, attribute);
     this.modalService.getModal('editModal').open(false);
   }
 
@@ -77,18 +77,30 @@ export class AttributeComponent implements OnInit {
 
   onDelete() {
     this.modalService.getModal('deleteModal').close();
-    this.objectAPI.deleteObject(this.deleteAttribute.id).subscribe(
-      res => {
-        // this.channels = JSON.parse(res)['channels'];
-      },
-      error => {
-        console.log(error);
-        alert('Unable to delete attribute data');
-      }
-    );
+    this.attributes = this.attributes.filter(c => c.id != this.deleteAttribute.id);
+    // this.objectAPI.deleteObject(this.deleteAttribute.id).subscribe(
+    //   res => {
+    //     // this.channels = JSON.parse(res)['channels'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to delete attribute data');
+    //   }
+    // );
   }
 
   onSubmit() {
-
+    this.modalService.getModal('editModal').close();
+    if (!this.editAttribute.id) {
+      let maxID = Math.max.apply(Math, this.attributes.map(function(o) { return o.id; }));
+      if (this.attributes.length < 1) {
+        maxID = 1;
+      }
+      this.editAttribute.id = maxID + 1;
+      this.attributes.push(this.editAttribute);
+    } else {
+      const edited = this.attributes.find( p => p.id === this.editAttribute.id);
+      Object.assign(edited, this.editAttribute);
+    }
   }
 }

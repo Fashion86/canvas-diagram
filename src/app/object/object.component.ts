@@ -53,7 +53,7 @@ export class ObjectComponent implements OnInit {
   }
 
   editData(object) {
-    this.editObject = object;
+    this.editObject = Object.assign({}, object);
     this.modalService.getModal('editModal').open(false);
   }
 
@@ -64,19 +64,28 @@ export class ObjectComponent implements OnInit {
 
   onDelete() {
     this.modalService.getModal('deleteModal').close();
-    this.objectAPI.deleteObject(this.deleteObject.id).subscribe(
-      res => {
-        // this.channels = JSON.parse(res)['channels'];
-      },
-      error => {
-        console.log(error);
-        alert('Unable to delete object data');
-      }
-    );
+    this.objects = this.objects.filter(c => c.id != this.deleteObject.id);
+    // this.objectAPI.deleteObject(this.deleteObject.id).subscribe(
+    //   res => {
+    //     // this.channels = JSON.parse(res)['channels'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to delete object data');
+    //   }
+    // );
   }
 
   onSubmit() {
-
+    this.modalService.getModal('editModal').close();
+    if (!this.editObject.id) {
+      const maxID = Math.max.apply(Math, this.objects.map(function(o) { return o.id; }));
+      this.editObject.id = maxID + 1;
+      this.objects.push(this.editObject);
+    } else {
+      const edited = this.objects.find( p => p.id === this.editObject.id);
+      Object.assign(edited, this.editObject);
+    }
   }
 
   goAttributes(object) {

@@ -211,15 +211,15 @@ export class UserComponent implements OnInit, AfterViewInit {
   onEditNode() {
     this.dialogFlag = 'edit';
     if (this.obj.data.category == 'question') {
-      this.modalService.getModal('editModal_Q').open(false);
+      this.modalService.getModal('detailModal').open(false);
     } else if (this.obj.data.category == 'answer') {
-      this.modalService.getModal('editModal_A').open(false);
+      this.modalService.getModal('detailModal').open(false);
     }
 //     this.myDiagram.startTransaction("vacate");
 //     // update the key, name, and comments
 //     this.myDiagram.model.setDataProperty(this.obj.data, "name", "(Vacant)");
 //     this.myDiagram.commitTransaction("vacate");
-// console.log(this.nodeDataArray, this.obj.data)
+console.log(this.nodeDataArray, this.obj.data)
   }
 
   onCreateQuestion() {
