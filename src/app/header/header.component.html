@@ -15,12 +15,13 @@
         <a routerLink="/register"><button type="button" class="btn btn-success">Load</button></a>
     </form>
     <ul class="nav navbar-nav navbar-right">
+      <li><a routerLink="/user">Conversation</a></li>
       <li><a routerLink="/channel">Channel</a></li>
       <li><a routerLink="/model">Model</a></li>
       <li class="dropdown">
         <a class="dropdown-toggle user-pic" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
           <img src="https://www.tutorialrepublic.com/examples/images/avatar/3.jpg" alt="Avatar">
-          {{user.name}} <span class="caret"></span></a>
+          {{user?.name}} <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a ><i class="fa fa-user-o"></i> Profile</a></li>
           <li><a (click)="logout()"><i class="fa fa-sign-out"></i> Log out</a></li>

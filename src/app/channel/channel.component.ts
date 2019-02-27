@@ -52,7 +52,7 @@ export class ChannelComponent implements OnInit {
   }
 
   editData(channel) {
-    this.editChannel = channel;
+    this.editChannel = Object.assign({}, channel);
     this.modalService.getModal('editModal').open(false);
   }
 
@@ -63,18 +63,41 @@ export class ChannelComponent implements OnInit {
 
   onDelete() {
     this.modalService.getModal('deleteModal').close();
-    this.channelAPI.deleteChannel(this.deleteChannel.id).subscribe(
-      res => {
-        // this.channels = JSON.parse(res)['channels'];
-      },
-      error => {
-        console.log(error);
-        alert('Unable to delete channel data');
-      }
-    );
+    this.channels = this.channels.filter(c => c.id != this.deleteChannel.id);
+    // this.channelAPI.deleteChannel(this.deleteChannel.id).subscribe(
+    //   res => {
+    //     // this.channels = JSON.parse(res)['channels'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to delete channel data');
+    //   }
+    // );
   }
 
   onSubmit() {
-
+    this.modalService.getModal('editModal').close();
+    if (!this.editChannel.id) {
+      const maxID = Math.max.apply(Math, this.channels.map(function(o) { return o.id; }));
+      this.editChannel.id = maxID + 1;
+      this.channels.push(this.editChannel);
+      // this.channelAPI.createChannel(this.editChannel).subscribe(
+      //   res => {
+      //   },
+      //   error => {
+      //     console.log(error);
+      //   }
+      // );
+    } else {
+      const edited = this.channels.find( p => p.id === this.editChannel.id);
+      Object.assign(edited, this.editChannel);
+      // this.channelAPI.updateChannel(this.editChannel).subscribe(
+      //   res => {
+      //   },
+      //   error => {
+      //     console.log(error);
+      //   }
+      // );
+    }
   }
 }

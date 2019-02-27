@@ -27,6 +27,14 @@ export class UserComponent implements OnInit, AfterViewInit {
   questions: QuestionModel[] = [];
   editQuestion: QuestionModel;
   editAnswer: AnswerModel;
+  myDiagram: any;
+  answerTemplate: any;
+  questionTemplate: any;
+  nodeDataArray: any[] = [];
+  linkDataArray: any[] = [];
+  e: any;
+  obj: any;
+  dialogFlag = 'create';
   constructor(
     public userService: UserService,
     public authService: AuthService,
@@ -60,7 +68,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     var $ = go.GraphObject.make;
-    var myDiagram = $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
+    this.myDiagram = $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
       {
         initialContentAlignment: go.Spot.Left,
         allowSelect: true,
@@ -89,41 +97,28 @@ export class UserComponent implements OnInit, AfterViewInit {
 
 
     // define a function named "addChild" that is invoked by a button click
-    const addChild = (e, obj) => {
+    const showAnswerDialog = (e, obj) => {
+      this.e = e;
+      this.obj = obj;
       this.onCreateAnswer();
-      //obj.part.node.select;
-      var selnode = myDiagram.selection.first();
-
-      if (selnode) selnode.isSelected = false;
-
-      obj.part.isSelected = true;
-      selnode = obj.part;
-      selnode.isHighlighted = false;
-      if (!(selnode instanceof go.Node)) return;
-
-      myDiagram.commit((d: any) => {
-        // have the Model add a new node data
-        var newnode;
-        if (selnode.data.type == "question")
-          newnode = { key: "N", condition: "Condition", expression: "expression", feedback: "feedback", type: "answer", category: "answer" };
-        else
-          newnode = { key: "N", name: "Name", channel: "Channel", expression: "Expression", type: "question", category: "question" };
-
-        d.model.addNodeData(newnode);  // this makes sure the key is unique
-        // and then add a link data connecting the original node with the new one
-        var newlink = { from: selnode.data.key, to: newnode.key };
-        // add the new link to the model
-        d.model.addLinkData(newlink);
-      }, "add node and link");
-      //console.log(selnode.data.type);
-      myDiagram.clearHighlighteds();
     };
-    myDiagram.animationManager.isEnabled = false;
-    //myDiagram.focus("null");
+    const showQuestionDialog = (e, obj) => {
+      this.e = e;
+      this.obj = obj;
+      this.onCreateQuestion();
+    };
 
-    myDiagram.model.set(myDiagram.model.modelData, "choices", ["one", "two", "three"]);
+    const editNode = (e, obj) => {
+      this.e = e;
+      this.obj = obj;
+      this.onEditNode();
+    };
 
-    var answerTemplate =
+    this.myDiagram.animationManager.isEnabled = false;
+
+    this.myDiagram.model.set(this.myDiagram.model.modelData, "choices", ["one", "two", "three"]);
+
+    this.answerTemplate =
       $(go.Node, "Auto",
         $(go.Shape, "Circle", { fill: "whitesmoke", strokeWidth: 1 }),
         $(go.Panel, "Vertical", { padding: 0, margin: 0 },
@@ -133,18 +128,17 @@ export class UserComponent implements OnInit, AfterViewInit {
             new go.Binding("text", "expression")),
           $(go.TextBlock, { margin: 2, editable: true },
             new go.Binding("text", "feedback")),
-          // $(go.TextBlock,
-          //   { text: "Channels",
-          //     editable: true,
-          //     font: "10pt Georgia, serif",
-          //     // areaBackground: "orangered",
-          //     // textEditor: selectbox,
-          //     scale: 1 },
-          //   new go.Binding("choices")),
-          $("Button", { margin: 2, click: addChild },
-            $(go.TextBlock, " + Add a question"))))
+          $("Button", { margin: 2, click: showQuestionDialog },
+            $(go.TextBlock, " + Add a question"))),
+        {
+          doubleClick: editNode,
+          // selectionChanged: function(part) {
+          //   var shape = part.elt(0);
+          //   shape.fill = part.isSelected ? "gray" : "white";
+          // }
+        });
 
-    var questionTemplate =
+    this.questionTemplate =
       $(go.Node, "Auto",
         $(go.Shape, "RoundedRectangle", { fill: "whitesmoke" }),
         $(go.Panel, "Vertical", { margin: 20 },
@@ -154,46 +148,49 @@ export class UserComponent implements OnInit, AfterViewInit {
             new go.Binding("text", "channel")),
           $(go.TextBlock, { margin: 2, editable: true },
             new go.Binding("text", "expression")),
-          $("Button", { margin: 2, click: addChild },
-            $(go.TextBlock, " + Add an answer")))
+          $("Button", { margin: 2, click: showAnswerDialog },
+            $(go.TextBlock, " + Add an answer"))),
+          {
+            doubleClick: editNode
+          }
 
       );
 
     // create the nodeTemplateMap, holding three node templates:
     var templmap = new go.Map(); // In TypeScript you could write: new go.Map<string, go.Node>();
     // for each of the node categories, specify which template to use
-    templmap.add("answer", answerTemplate);
-    templmap.add("question", questionTemplate);
+    templmap.add("answer", this.answerTemplate);
+    templmap.add("question", this.questionTemplate);
 
     //templmap.add("", myDiagram.nodeTemplate);
-    myDiagram.nodeTemplateMap = templmap;
-    myDiagram.layout = $(go.TreeLayout);
+    this.myDiagram.nodeTemplateMap = templmap;
+    this.myDiagram.layout = $(go.TreeLayout);
 
-    var nodeDataArray = [
-      { key: "Alpha", name: "Name", channel: "Channel", expression: "Expression", type: "question", category: "question" },
+    this.nodeDataArray = [
+      { key: "N", name: "Name", channel: "Channel", expression: "Expression", type: "question", category: "question" },
     ];
-    var linkDataArray = [
+    this.linkDataArray = [
       { from: "Alpha", to: "Beta" }
     ];
     // create the Overview and initialize it to show the main Diagram
     var myOverview =
       $(go.Overview, "myOverviewDiv",
-        { observed: myDiagram,contentAlignment: go.Spot.Center });
-    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+        { observed: this.myDiagram,contentAlignment: go.Spot.Center });
+    this.myDiagram.model = new go.GraphLinksModel(this.nodeDataArray, this.linkDataArray);
 
-    myDiagram.model.undoManager.isEnabled = true;
+    this.myDiagram.model.undoManager.isEnabled = true;
 
-    document.getElementById('zoom-fit').addEventListener('click', function () {
-      myDiagram.zoomToFit();
+    document.getElementById('zoom-fit').addEventListener('click',  () => {
+      this.myDiagram.zoomToFit();
     });
-    document.getElementById('zoom-in').addEventListener('click', function () {
-      myDiagram.commandHandler.increaseZoom();
+    document.getElementById('zoom-in').addEventListener('click', () =>  {
+      this.myDiagram.commandHandler.increaseZoom();
     });
-    document.getElementById('zoom-out').addEventListener('click', function () {
-      myDiagram.commandHandler.decreaseZoom();
+    document.getElementById('zoom-out').addEventListener('click', () =>  {
+      this.myDiagram.commandHandler.decreaseZoom();
     });
-    document.getElementById('zoom-origin').addEventListener('click', function () {
-      myDiagram.commandHandler.resetZoom();
+    document.getElementById('zoom-origin').addEventListener('click', () =>  {
+      this.myDiagram.commandHandler.resetZoom();
     });
   }
   logout() {
@@ -206,16 +203,65 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
 
   onCreateAnswer() {
+    this.dialogFlag = 'create';
     this.editAnswer = new AnswerModel();
     this.modalService.getModal('editModal_A').open(false);
   }
 
+  onEditNode() {
+    this.dialogFlag = 'edit';
+    if (this.obj.data.category == 'question') {
+      this.modalService.getModal('editModal_Q').open(false);
+    } else if (this.obj.data.category == 'answer') {
+      this.modalService.getModal('editModal_A').open(false);
+    }
+//     this.myDiagram.startTransaction("vacate");
+//     // update the key, name, and comments
+//     this.myDiagram.model.setDataProperty(this.obj.data, "name", "(Vacant)");
+//     this.myDiagram.commitTransaction("vacate");
+// console.log(this.nodeDataArray, this.obj.data)
+  }
+
   onCreateQuestion() {
+    this.dialogFlag = 'create';
     this.editQuestion = new QuestionModel();
     this.modalService.getModal('editModal_Q').open(false);
   }
 
-  onSubmit() {
-
+  addAnswer() {
+    this.modalService.getModal('editModal_A').close();
+    this.addChildNode();
   }
+  addQuestion() {
+    this.modalService.getModal('editModal_Q').close();
+    this.addChildNode();
+  }
+  addChildNode() {
+    var selnode = this.myDiagram.selection.first();
+
+    if (selnode) selnode.isSelected = false;
+
+    this.obj.part.isSelected = true;
+    selnode = this.obj.part;
+    selnode.isHighlighted = false;
+    if (!(selnode instanceof go.Node)) return;
+
+    this.myDiagram.commit((d: any) => {
+      // have the Model add a new node data
+      var newnode;
+      if (selnode.data.type == "question")
+        newnode = { key: "N", condition: this.editAnswer.condition, expression: "expression", feedback: "feedback", type: "answer", category: "answer" };
+      else
+        newnode = { key: "N", name: "Name", channel: "Channel", expression: "Expression", type: "question", category: "question" };
+
+      d.model.addNodeData(newnode);  // this makes sure the key is unique
+      // and then add a link data connecting the original node with the new one
+      var newlink = { from: selnode.data.key, to: newnode.key };
+      // add the new link to the model
+      d.model.addLinkData(newlink);
+    }, "add node and link");
+    //console.log(selnode.data.type);
+    this.myDiagram.clearHighlighteds();
+  }
+
 }
