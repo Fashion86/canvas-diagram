@@ -2,7 +2,7 @@ import {AttributeModel} from './attribute.model';
 
 export class ObjectModel {
   id: number;
-  name: string;
+  typeName: string;
   value: string;
   attributes: AttributeModel[];
 }

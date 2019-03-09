@@ -1,90 +1,268 @@
 <app-header></app-header>
 <div class="container">
-  <h3>Objects ({{objects?.length}})</h3>
+  <h3>Objects</h3>
   <div class="add-data">
-    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Object</button>
-    <div *ngIf="objects?.length>0" class="searchbar input-group col-sm-4">
-      <input class="form-control" type="text" placeholder="Filter by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">
-      <span class="input-group-addon"><i class="fa fa-search"></i></span>
-    </div>
+    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object')">Add New Object</button>
+    <!--<div *ngIf="objects?.length>0" class="searchbar input-group col-sm-4">-->
+      <!--<input class="form-control" type="text" placeholder="Filter by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">-->
+      <!--<span class="input-group-addon"><i class="fa fa-search"></i></span>-->
+    <!--</div>-->
   </div>
-  <div class="table-group table-responsive table-bordered">
-    <table id="reports-table" class="table table-hover table-striped">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>Value</th>
-        <th>Attributes</th>
-        <th colspan="2">Options</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let object of objects; let i = index">
-        <td>
-          {{object.name}}
-        </td>
-        <td>
-          {{object.value}}
-        </td>
-        <td>
-          <a (click)="goAttributes(object)">View Attributes</a>
-        </td>
-        <td>
-          <a (click)="editData(object)">
-            <i class="fa fa-pencil"></i>
-          </a>
-        </td>
-        <td>
-          <a style="color: red" (click)="deleteData(object, i)">
-            <i class="fa fa-trash-o"></i>
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="pagination-wrapper">
-      <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
-    </div>
+  <div>
+    <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
+        <div  *ngFor="let object of objects; let k = index">
+            <p-accordionTab header="{{object.typeName}}">
+                <p-accordion [multiple]="true">
+                    <p-accordionTab header="Attributes">
+                        <span class="add-item" (click)="onCreate('attribute', object)"><a><i class="fa fa-plus"></i>Add New Attribute</a></span>
+                        <div class="table-group table-responsive table-bordered">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>NameType</th>
+                                    <!--<th>Options</th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let attr of object.attributes; let i = index">
+                                    <td>
+                                        {{attr.attributeName}}
+                                    </td>
+                                    <td>
+                                        {{attr.attributeNameType}}
+                                    </td>
+                                    <!--<td class="control-optios">-->
+                                        <!--<a (click)="editData(attr)">-->
+                                            <!--<i class="fa fa-pencil"></i>-->
+                                        <!--</a>-->
+                                        <!--<a style="color: red" (click)="deleteData(attr, i)">-->
+                                            <!--<i class="fa fa-trash-o"></i>-->
+                                        <!--</a>-->
+                                    <!--</td>-->
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination-wrapper">
+                                <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+                            </div>
+                        </div>
+                    </p-accordionTab>
+                    <p-accordionTab header="Functions">
+                        <span class="add-item" (click)="onCreate('function', object)"><a><i class="fa fa-plus"></i>Add New Function</a></span>
+                        <div class="table-group table-responsive table-bordered">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Function Name</th>
+                                    <th>Url</th>
+                                    <!--<th>Options</th>-->
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let func of object.functions; let i = index">
+                                    <td>
+                                        {{func.functionName}}
+                                    </td>
+                                    <td>
+                                        {{func.iconUrl}}
+                                    </td>
+                                    <!--<td class="control-optios">-->
+                                        <!--<a (click)="editData(func)">-->
+                                            <!--<i class="fa fa-pencil"></i>-->
+                                        <!--</a>-->
+                                        <!--<a style="color: red" (click)="deleteData(func, i)">-->
+                                            <!--<i class="fa fa-trash-o"></i>-->
+                                        <!--</a>-->
+                                    <!--</td>-->
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination-wrapper">
+                                <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+                            </div>
+                        </div>
+                    </p-accordionTab>
+                    <p-accordionTab header="Comparators">
+                        <span class="add-item" (click)="onCreate('comparator', object)"><a><i class="fa fa-plus"></i>Add New Comparator</a></span>
+                        <div class="table-group table-responsive table-bordered">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Comparator Name</th>
+                                    <th>Url</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let attr of object.comparators; let i = index">
+                                    <td>
+                                        {{attr.codeUrl}}
+                                    </td>
+                                    <td>
+                                        {{attr.iconUrl}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination-wrapper">
+                                <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+                            </div>
+                        </div>
+                    </p-accordionTab>
+                </p-accordion>
+            </p-accordionTab>
+        </div>
+    </p-accordion>
   </div>
 </div>
 
-<!-- edit dialog-->
-<ngx-smart-modal #editModal identifier="editModal" [dismissable]="false">
+<!-- edit object dialog-->
+<ngx-smart-modal #object identifier="object" [dismissable]="false">
+    <div class="dg-heaser">
+        <h3>
+            <span *ngIf="editObject.id">Edit Object</span>
+            <span *ngIf="!editObject.id">Create Object</span>
+        </h3>
+    </div>
+    <div class="dg-body">
+        <form class="form-horizontal" #form1="ngForm" (ngSubmit)="onSubmit('object')">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Type Name</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editObject.typeName" placeholder="Name" name="name" required>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="control-label col-sm-3">Value</label>-->
+                <!--<div class="col-sm-9 right-div">-->
+                    <!--<input type="text" class="form-control" [(ngModel)]="editObject.value" placeholder="Value" name="value" required>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="form-group">
+                <div class="control-btn">
+                    <button *ngIf="editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form1.form.invalid">Update
+                    </button>
+                    <button *ngIf="!editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form1.invalid">Create
+                    </button>
+                    <button type="button" class="btn btn-default btn-md btn-right" (click)="object.close()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ngx-smart-modal>
+
+<!-- edit attribute dialog-->
+<ngx-smart-modal #attribute identifier="attribute" [dismissable]="false">
   <div class="dg-heaser">
     <h3>
-      <span *ngIf="editObject.id">Edit Object</span>
-      <span *ngIf="!editObject.id">Create Object</span>
+      <!--<span *ngIf="editObject.id">Edit Object</span>-->
+      <span>Create Attribute</span>
     </h3>
   </div>
   <div class="dg-body">
-    <form class="form-horizontal" #form="ngForm" (ngSubmit)="onSubmit()">
+    <form class="form-horizontal" #form2="ngForm" (ngSubmit)="onSubmit('attribute')">
       <div class="form-group">
         <label class="control-label col-sm-3">Name</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editObject.name" placeholder="Name" name="name" required>
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeName" placeholder="Name" name="name" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-3">Value</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editObject.value" placeholder="Value" name="value" required>
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeNameType" placeholder="Value" name="value" required>
         </div>
       </div>
       <div class="form-group">
         <div class="control-btn">
-          <button *ngIf="editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
-                  [disabled]="form.form.invalid">Update
+          <button *ngIf="editAttribute.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form2.form.invalid">Update
           </button>
-          <button *ngIf="!editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
-                  [disabled]="form.form.invalid">Create
+          <button *ngIf="!editAttribute.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form2.form.invalid">Create
           </button>
-          <button type="button" class="btn btn-default btn-md btn-right" (click)="editModal.close()">Cancel</button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="attribute.close()">Cancel</button>
         </div>
       </div>
     </form>
   </div>
 </ngx-smart-modal>
 
+<!-- edit function dialog-->
+<ngx-smart-modal #function identifier="function" [dismissable]="false">
+    <div class="dg-heaser">
+        <h3>
+            <span *ngIf="editFunction.id">Edit Function</span>
+            <span *ngIf="!editFunction.id">Create Function</span>
+        </h3>
+    </div>
+    <div class="dg-body">
+        <form class="form-horizontal" #form3="ngForm" (ngSubmit)="onSubmit('function')">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Function Name</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editFunction.functionName" placeholder="Name" name="name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Icon Url</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editFunction.iconUrl" placeholder="Value" name="value" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-btn">
+                    <button *ngIf="editFunction.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form3.form.invalid">Update
+                    </button>
+                    <button *ngIf="!editFunction.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form3.form.invalid">Create
+                    </button>
+                    <button type="button" class="btn btn-default btn-md btn-right" (click)="function.close()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ngx-smart-modal>
+
+<!-- edit comparator dialog-->
+<ngx-smart-modal #comparator identifier="comparator" [dismissable]="false">
+    <div class="dg-heaser">
+        <h3>
+            <span *ngIf="editComparator.id">Edit Comparator</span>
+            <span *ngIf="!editComparator.id">Create Comparator</span>
+        </h3>
+    </div>
+    <div class="dg-body">
+        <form class="form-horizontal" #form4="ngForm" (ngSubmit)="onSubmit('comparator')">
+            <div class="form-group">
+                <label class="control-label col-sm-3">Comparator Name</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editComparator.comparatorName" placeholder="Name" name="name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Icon Url</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editComparator.iconUrl" placeholder="Value" name="value" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-btn">
+                    <button *ngIf="editComparator.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form4.form.invalid">Update
+                    </button>
+                    <button *ngIf="!editComparator.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                            [disabled]="form4.form.invalid">Create
+                    </button>
+                    <button type="button" class="btn btn-default btn-md btn-right" (click)="comparator.close()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ngx-smart-modal>
 <!-- delete dialog-->
 <ngx-smart-modal #deleteModal identifier="deleteModal" [dismissable]="false">
   <div class="dg-heaser">

@@ -1,6 +1,6 @@
 <app-header></app-header>
 <div class="container">
-  <h3>Channels ({{channels?.length}})</h3>
+  <h3>Channels</h3>
   <div class="add-data">
     <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Channel</button>
     <div *ngIf="channels?.length>0" class="searchbar input-group col-sm-4">
@@ -8,39 +8,90 @@
       <span class="input-group-addon"><i class="fa fa-search"></i></span>
     </div>
   </div>
-  <div class="table-group table-responsive table-bordered">
-    <table id="reports-table" class="table table-hover table-striped">
-      <thead>
-      <tr>
-        <th>Type</th>
-        <th>Connection</th>
-        <th colspan="2">Options</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let channel of channels; let i = index">
-        <td>
-          {{channel.type}}
-        </td>
-        <td>
-          {{channel.connection}}
-        </td>
-        <td>
-          <a (click)="editData(channel)">
-            <i class="fa fa-pencil"></i>
-          </a>
-        </td>
-        <td>
-          <a style="color: red" (click)="deleteData(channel)">
-            <i class="fa fa-trash-o"></i>
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-    <div class="pagination-wrapper">
-      <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
-    </div>
+  <div>
+    <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
+      <p-accordionTab header="Godfather I">
+        <div class="table-group table-responsive table-bordered">
+          <table class="table table-hover table-striped">
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Connection</th>
+              <th></th>
+              <th></th>
+              <!--<th colspan="">Options</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let channel of channels; let i = index">
+              <td>
+                {{channel.type}}
+              </td>
+              <td>
+                {{channel.connection}}
+              </td>
+              <td>
+                <a (click)="editData(channel)">
+                  <i class="fa fa-pencil"></i>
+                </a>
+              </td>
+              <td>
+                <a style="color: red" (click)="deleteData(channel)">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination-wrapper">
+            <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+          </div>
+        </div>
+      </p-accordionTab>
+      <p-accordionTab header="Godfather II">
+        <div class="table-group table-responsive table-bordered">
+          <table class="table table-hover table-striped">
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Connection</th>
+              <th></th>
+              <th></th>
+              <!--<th colspan="">Options</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let channel of channels; let i = index">
+              <td>
+                {{channel.type}}
+              </td>
+              <td>
+                {{channel.connection}}
+              </td>
+              <td>
+                <a (click)="editData(channel)">
+                  <i class="fa fa-pencil"></i>
+                </a>
+              </td>
+              <td>
+                <a style="color: red" (click)="deleteData(channel)">
+                  <i class="fa fa-trash-o"></i>
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination-wrapper">
+            <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
+          </div>
+        </div>
+      </p-accordionTab>
+      <p-accordionTab header="Godfather III">
+        After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
+      </p-accordionTab>
+    </p-accordion>
   </div>
 </div>
 
@@ -57,7 +108,14 @@
       <div class="form-group">
         <label class="control-label col-sm-3">Type</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editChannel.type" placeholder="Type" name="type" required>
+          <select class="form-control" [(ngModel)]="editChannel.type"
+                  (change)="onSelectType($event)" name="type">
+            <!--<option [ngValue]="null">-&#45;&#45;</option>-->
+            <option *ngFor="let type of types"  value={{type}}>
+              <span>{{type}}</span>
+            </option>
+          </select>
+          <!--<input type="text" class="form-control" [(ngModel)]="editChannel.type" placeholder="Type" name="type" required>-->
         </div>
       </div>
       <div class="form-group">

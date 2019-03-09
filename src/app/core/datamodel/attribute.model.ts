@@ -1,7 +1,8 @@
 import{AttributeTypeModel}  from './attribute-type.model'
 export class AttributeModel {
   id: number;
-  name: string;
-  value: string;
-  attribute: AttributeTypeModel;
+  typeName: string;
+  attributeName: string;
+  attributeNameType: string;
+  // attribute: AttributeTypeModel;
 }

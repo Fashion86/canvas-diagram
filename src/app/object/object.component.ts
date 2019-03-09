@@ -3,6 +3,9 @@ import {ModelService} from '../core/services/model.service';
 import {ObjectModel} from '../core/datamodel/object.model';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
+import {AttributeModel} from '../core/datamodel/attribute.model';
+import {FunctionModel} from '../core/datamodel/function.model';
+import {ComparatorModel} from '../core/datamodel/comparator.model';
 
 @Component({
   selector: 'app-object',
@@ -11,16 +14,25 @@ import {Router} from '@angular/router';
 })
 export class ObjectComponent implements OnInit {
 
-  objects: ObjectModel[] = [];
+  objects: any[] = [];
   searchstr = '';
   editObject: ObjectModel;
   deleteObject: ObjectModel;
+  editAttribute: AttributeModel;
+  deleteAttribute: AttributeModel;
+  editFunction: FunctionModel;
+  deleteFunction: FunctionModel;
+  editComparator: ComparatorModel;
+  deleteComparator: ComparatorModel;
   constructor(private objectAPI: ModelService,
               private router: Router,
               public modalService: NgxSmartModalService) { }
 
   ngOnInit() {
     this.editObject = new ObjectModel();
+    this.editAttribute = new AttributeModel();
+    this.editFunction = new FunctionModel();
+    this.editComparator = new ComparatorModel();
     this.deleteObject = null;
     this.getObjectList();
   }
@@ -28,7 +40,7 @@ export class ObjectComponent implements OnInit {
   getObjectList() {
     this.objectAPI.getObjectList().subscribe(
       res => {
-        this.objects = JSON.parse(res)['objects'];
+        this.objects = res['Items'];
         // if (res['success']) {
         //   this.channels = res['data'];
         // } else {
@@ -47,9 +59,15 @@ export class ObjectComponent implements OnInit {
 
   }
 
-  onCreate() {
+  onCreate(param, object) {
     this.editObject = new ObjectModel();
-    this.modalService.getModal('editModal').open(false);
+    this.editAttribute = new AttributeModel();
+    this.editAttribute.typeName = object.typeName;
+    this.editFunction = new FunctionModel();
+    this.editFunction.typeName = object.typeName;
+    this.editComparator = new ComparatorModel();
+    this.editComparator.typeName = object.typeName;
+    this.modalService.getModal(param).open(false);
   }
 
   editData(object) {
@@ -76,19 +94,84 @@ export class ObjectComponent implements OnInit {
     // );
   }
 
-  onSubmit() {
-    this.modalService.getModal('editModal').close();
-    if (!this.editObject.id) {
-      const maxID = Math.max.apply(Math, this.objects.map(function(o) { return o.id; }));
-      this.editObject.id = maxID + 1;
-      this.objects.push(this.editObject);
-    } else {
-      const edited = this.objects.find( p => p.id === this.editObject.id);
-      Object.assign(edited, this.editObject);
+  onSubmit(param) {
+    this.modalService.getModal(param).close();
+    if (param == 'object') {
+      this.objectAPI.createObject(this.editObject).subscribe(
+        res => {
+          this.getObjectList();
+        },
+        error => {
+          console.log(error);
+          alert('Unable to fetch object data');
+        }
+      );
+    } else if (param == 'attribute') {
+      this.objectAPI.createAttribute(this.editAttribute).subscribe(
+        res => {
+          // this.getObjectList();
+        },
+        error => {
+          console.log(error);
+          alert('Unable to fetch object data');
+        }
+      );
+    } else if (param == 'function') {
+      this.objectAPI.createFunction(this.editFunction).subscribe(
+        res => {
+          // this.getObjectList();
+        },
+        error => {
+          console.log(error);
+          alert('Unable to fetch object data');
+        }
+      );
+    } else if (param == 'comparator') {
+      this.objectAPI.createComparator(this.editComparator).subscribe(
+        res => {
+          // this.getObjectList();
+        },
+        error => {
+          console.log(error);
+          alert('Unable to fetch object data');
+        }
+      );
     }
   }
 
   goAttributes(object) {
     this.router.navigate(['/model', object.id, 'attributes']);
+  }
+
+  onTabOpen(event) {
+    this.objectAPI.getAttributesByObject(this.objects[event.index].typeName).subscribe(
+      res => {
+        this.objects[event.index]['attributes'] = res['Items'];
+      },
+      error => {
+        console.log(error);
+        alert('Unable to fetch attributes data');
+      }
+    );
+
+    this.objectAPI.getFunctionsByObject(this.objects[event.index].typeName).subscribe(
+      res => {
+        this.objects[event.index]['functions'] = res['Items'];
+      },
+      error => {
+        console.log(error);
+        alert('Unable to fetch functions data');
+      }
+    );
+
+    this.objectAPI.getComparatorsByObject(this.objects[event.index].typeName).subscribe(
+      res => {
+        this.objects[event.index]['comparators'] = res['Items'];
+      },
+      error => {
+        console.log(error);
+        alert('Unable to fetch comparators data');
+      }
+    );
   }
 }

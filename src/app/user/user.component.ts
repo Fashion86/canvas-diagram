@@ -219,7 +219,7 @@ export class UserComponent implements OnInit, AfterViewInit {
 //     // update the key, name, and comments
 //     this.myDiagram.model.setDataProperty(this.obj.data, "name", "(Vacant)");
 //     this.myDiagram.commitTransaction("vacate");
-console.log(this.nodeDataArray, this.obj.data)
+// console.log(this.nodeDataArray, this.obj.data)
   }
 
   onCreateQuestion() {
@@ -230,13 +230,13 @@ console.log(this.nodeDataArray, this.obj.data)
 
   addAnswer() {
     this.modalService.getModal('editModal_A').close();
-    this.addChildNode();
+    this.addChildNode(this.editAnswer);
   }
   addQuestion() {
     this.modalService.getModal('editModal_Q').close();
-    this.addChildNode();
+    this.addChildNode(this.editQuestion);
   }
-  addChildNode() {
+  addChildNode(nodedata: any) {
     var selnode = this.myDiagram.selection.first();
 
     if (selnode) selnode.isSelected = false;
@@ -250,7 +250,7 @@ console.log(this.nodeDataArray, this.obj.data)
       // have the Model add a new node data
       var newnode;
       if (selnode.data.type == "question")
-        newnode = { key: "N", condition: this.editAnswer.condition, expression: "expression", feedback: "feedback", type: "answer", category: "answer" };
+        newnode = { key: "N", condition: nodedata.condition, expression: "expression", feedback: "feedback", type: "answer", category: "answer" };
       else
         newnode = { key: "N", name: "Name", channel: "Channel", expression: "Expression", type: "question", category: "question" };
 

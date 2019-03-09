@@ -8,6 +8,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { NgxSmartModalModule } from 'ngx-smart-modal';
+import { DataTablesModule } from 'angular-datatables';
 
 import { LoginComponent } from './login/login.component';
 import { UserComponent } from './user/user.component';
@@ -32,6 +33,11 @@ import { ChannelComponent } from './channel/channel.component';
 import { ObjectComponent } from './object/object.component';
 import { AttributeComponent } from './object/attribute/attribute.component';
 
+import {AccordionModule} from 'primeng/accordion';
+import { FunctionComponent } from './object/function/function.component';
+import { ComparatorComponent } from './object/comparator/comparator.component';
+// import {TreeTableModule} from 'primeng/treetable';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +47,9 @@ import { AttributeComponent } from './object/attribute/attribute.component';
     HeaderComponent,
     ChannelComponent,
     ObjectComponent,
-    AttributeComponent
+    AttributeComponent,
+    FunctionComponent,
+    ComparatorComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +61,9 @@ import { AttributeComponent } from './object/attribute/attribute.component';
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxSmartModalModule.forRoot()
+    NgxSmartModalModule.forRoot(),
+    DataTablesModule,
+    AccordionModule
   ],
   // exports: [
   //   MatCardModule,

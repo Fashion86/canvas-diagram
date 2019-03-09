@@ -10,11 +10,29 @@ export class ModelService {
   getObjectList() {
     const httpParams = new HttpParams();
     // .append('filename', filename)
-    // return this.http.get(Constants.API_URL + '/getChannelList',  {params: httpParams});
+    return this.http.get(Constants.API_URL + '/types',  {params: httpParams});
     // json dumy data for test
-    return this.http.get('/assets/objects.json', { headers: new HttpHeaders()
-        .set('Content-Type', 'application/json')
-      , responseType: 'text' });
+    // return this.http.get('/assets/objects.json', { headers: new HttpHeaders()
+    //     .set('Content-Type', 'application/json')
+    //   , responseType: 'text' });
+  }
+
+  getAttributesByObject(objName) {
+    const httpParams = new HttpParams()
+    .append('typeName', objName);
+    return this.http.get(Constants.API_URL + '/types/attributes',  {params: httpParams});
+  }
+
+  getFunctionsByObject(objName) {
+    const httpParams = new HttpParams()
+      .append('typeName', objName);
+    return this.http.get(Constants.API_URL + '/types/functions',  {params: httpParams});
+  }
+
+  getComparatorsByObject(objName) {
+    const httpParams = new HttpParams()
+      .append('typeName', objName);
+    return this.http.get(Constants.API_URL + '/types/comparators',  {params: httpParams});
   }
 
   getObjectByID(id: number) {
@@ -22,7 +40,19 @@ export class ModelService {
   }
 
   createObject(object: any) {
-    return this.http.post(Constants.API_URL + '/create/object', object);
+    return this.http.post(Constants.API_URL + '/types', object);
+  }
+
+  createAttribute(attribute: any) {
+    return this.http.post(Constants.API_URL + '/types/attributes', attribute);
+  }
+
+  createFunction(functions: any) {
+    return this.http.post(Constants.API_URL + '/types/functions', functions);
+  }
+
+  createComparator(comparator: any) {
+    return this.http.post(Constants.API_URL + '/types/comparators', comparator);
   }
 
   updateObject(object: any) {

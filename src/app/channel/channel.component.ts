@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FirebaseUserModel} from '../core/datamodel/user.model';
 import {ChannelService} from '../core/services/channel.service';
 import {ChannelModel} from '../core/datamodel/channel.model';
@@ -9,21 +9,42 @@ import { NgxSmartModalService } from 'ngx-smart-modal';
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent implements OnInit {
+export class ChannelComponent implements OnInit, AfterViewInit {
 
   searchstr = '';
   channels: ChannelModel[] = [];
   editChannel: ChannelModel;
   deleteChannel: ChannelModel;
+  types = ['Facebook', 'Webclient', 'Api'];
+  tableOptions = {};
   constructor(private channelAPI: ChannelService,
               public modalService: NgxSmartModalService) { }
 
   ngOnInit() {
     this.editChannel = new ChannelModel();
     this.deleteChannel = null;
+    this.tableOptions = {
+      paging: false,
+      searching: false,
+      ordering:  false
+    };
     this.getChannelList();
   }
-
+  ngAfterViewInit(): void{
+    var table = $('#channeltable').DataTable( {
+      "columns": [
+        {
+          "className":      'details-control',
+          "orderable":      true,
+          "data":           null,
+          "defaultContent": ''
+        },
+        { "data": "type" },
+        { "data": "connection" }
+      ],
+      "order": [[1, 'asc']]
+    } );
+  }
   getChannelList() {
 
     this.channelAPI.getChannelList().subscribe(
@@ -99,5 +120,11 @@ export class ChannelComponent implements OnInit {
       //   }
       // );
     }
+  }
+  onTabOpen(event) {
+    console.log(event)
+  }
+  onSelectType(event) {
+    console.log(this.editChannel.type)
   }
 }
