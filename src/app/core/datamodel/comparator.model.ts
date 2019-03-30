@@ -4,5 +4,6 @@ export class ComparatorModel {
   comparatorName: string;
   code: string;
   iconUrl: string;
-  icon: string;
+  codeUrl: string;
+  returnType: string;
 }

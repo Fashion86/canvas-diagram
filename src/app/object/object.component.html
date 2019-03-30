@@ -2,15 +2,15 @@
 <div class="container">
   <h3>Objects</h3>
   <div class="add-data">
-    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object')">Add New Object</button>
+    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object', null)">Add New Object</button>
     <!--<div *ngIf="objects?.length>0" class="searchbar input-group col-sm-4">-->
       <!--<input class="form-control" type="text" placeholder="Filter by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">-->
       <!--<span class="input-group-addon"><i class="fa fa-search"></i></span>-->
     <!--</div>-->
   </div>
-  <div>
+  <div class="table-group">
     <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
-        <div  *ngFor="let object of objects; let k = index">
+        <div  *ngFor="let object of pageobjects; let k = index">
             <p-accordionTab header="{{object.typeName}}">
                 <p-accordion [multiple]="true">
                     <p-accordionTab header="Attributes">
@@ -19,7 +19,7 @@
                             <table class="table table-hover table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>Attribute Name</th>
                                     <th>NameType</th>
                                     <!--<th>Options</th>-->
                                 </tr>
@@ -55,14 +55,21 @@
                                 <thead>
                                 <tr>
                                     <th>Function Name</th>
-                                    <th>Url</th>
-                                    <!--<th>Options</th>-->
+                                    <th>Code</th>
+                                    <th>Code Url</th>
+                                    <th>Icon Url</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr *ngFor="let func of object.functions; let i = index">
                                     <td>
                                         {{func.functionName}}
+                                    </td>
+                                    <td>
+                                        {{func.code}}
+                                    </td>
+                                    <td>
+                                        {{func.codeUrl}}
                                     </td>
                                     <td>
                                         {{func.iconUrl}}
@@ -90,16 +97,28 @@
                                 <thead>
                                 <tr>
                                     <th>Comparator Name</th>
-                                    <th>Url</th>
+                                    <th>Code</th>
+                                    <th>Code Url</th>
+                                    <th>Icon Url</th>
+                                    <th>Return Type</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr *ngFor="let attr of object.comparators; let i = index">
+                                <tr *ngFor="let comp of object.comparators; let i = index">
                                     <td>
-                                        {{attr.codeUrl}}
+                                        {{comp.comparatorName}}
                                     </td>
                                     <td>
-                                        {{attr.iconUrl}}
+                                        {{comp.code}}
+                                    </td>
+                                    <td>
+                                        {{comp.codeUrl}}
+                                    </td>
+                                    <td>
+                                        {{comp.iconUrl}}
+                                    </td>
+                                    <td>
+                                        {{comp.returnType}}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -113,11 +132,14 @@
             </p-accordionTab>
         </div>
     </p-accordion>
+      <div class="pagination-wrapper">
+          <p-paginator [rows]="15" [totalRecords]="totalRecords" pageLinkSize="3" [rowsPerPageOptions]="[15,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+      </div>
   </div>
 </div>
 
 <!-- edit object dialog-->
-<ngx-smart-modal #object identifier="object" [dismissable]="false">
+<ngx-smart-modal #object identifier="object" class="mymodal" [dismissable]="false">
     <div class="dg-heaser">
         <h3>
             <span *ngIf="editObject.id">Edit Object</span>
@@ -170,9 +192,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="control-label col-sm-3">Value</label>
+        <label class="control-label col-sm-3">Type</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeNameType" placeholder="Value" name="value" required>
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeNameType" placeholder="Type" name="type" required>
         </div>
       </div>
       <div class="form-group">
@@ -209,7 +231,19 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Icon Url</label>
                 <div class="col-sm-9 right-div">
-                    <input type="text" class="form-control" [(ngModel)]="editFunction.iconUrl" placeholder="Value" name="value" required>
+                    <input type="text" class="form-control" [(ngModel)]="editFunction.iconUrl" placeholder="Icon Url" name="iconUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Code</label>
+                <div class="col-sm-9 right-div">
+                    <textarea type="text" class="form-control" rows="3" [(ngModel)]="editFunction.code" placeholder="Code" name="code"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Code Url</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editFunction.codeUrl" placeholder="Code Url" name="codeUrl">
                 </div>
             </div>
             <div class="form-group">
@@ -246,7 +280,25 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Icon Url</label>
                 <div class="col-sm-9 right-div">
-                    <input type="text" class="form-control" [(ngModel)]="editComparator.iconUrl" placeholder="Value" name="value" required>
+                    <input type="text" class="form-control" [(ngModel)]="editComparator.iconUrl" placeholder="Icon Url" name="value">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Code</label>
+                <div class="col-sm-9 right-div">
+                    <textarea type="text" rows="3" class="form-control" [(ngModel)]="editComparator.code" placeholder="Code" name="code"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Code Url</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editComparator.codeUrl" placeholder="Code Url" name="codeUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Return Type</label>
+                <div class="col-sm-9 right-div">
+                    <input type="text" class="form-control" [(ngModel)]="editComparator.returnType" placeholder="Return Type" name="returnType">
                 </div>
             </div>
             <div class="form-group">

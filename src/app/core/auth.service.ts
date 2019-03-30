@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import 'rxjs/add/operator/toPromise';
+
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
@@ -75,7 +75,7 @@ export class AuthService {
   doLogout(){
     return new Promise((resolve, reject) => {
       if(firebase.auth().currentUser){
-        this.afAuth.auth.signOut()
+        this.afAuth.auth.signOut();
         resolve();
       }
       else{

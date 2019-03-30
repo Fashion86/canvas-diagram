@@ -15,6 +15,7 @@ import {ComparatorModel} from '../core/datamodel/comparator.model';
 export class ObjectComponent implements OnInit {
 
   objects: any[] = [];
+  pageobjects: any[] = [];
   searchstr = '';
   editObject: ObjectModel;
   deleteObject: ObjectModel;
@@ -24,6 +25,7 @@ export class ObjectComponent implements OnInit {
   deleteFunction: FunctionModel;
   editComparator: ComparatorModel;
   deleteComparator: ComparatorModel;
+  totalRecords: number;
   constructor(private objectAPI: ModelService,
               private router: Router,
               public modalService: NgxSmartModalService) { }
@@ -36,11 +38,17 @@ export class ObjectComponent implements OnInit {
     this.deleteObject = null;
     this.getObjectList();
   }
-
+  paginate(event) {
+    this.pageobjects = [];
+    this.pageobjects = this.objects.slice(event.first, event.first + event.rows);
+  }
   getObjectList() {
     this.objectAPI.getObjectList().subscribe(
       res => {
         this.objects = res['Items'];
+        this.totalRecords = this.objects.length;
+        this.pageobjects = [];
+        this.pageobjects = this.objects.slice(0,15);
         // if (res['success']) {
         //   this.channels = res['data'];
         // } else {
@@ -60,13 +68,16 @@ export class ObjectComponent implements OnInit {
   }
 
   onCreate(param, object) {
-    this.editObject = new ObjectModel();
-    this.editAttribute = new AttributeModel();
-    this.editAttribute.typeName = object.typeName;
-    this.editFunction = new FunctionModel();
-    this.editFunction.typeName = object.typeName;
-    this.editComparator = new ComparatorModel();
-    this.editComparator.typeName = object.typeName;
+    if (param === 'object') {
+      this.editObject = new ObjectModel();
+    } else {
+      this.editAttribute = new AttributeModel();
+      this.editAttribute.typeName = object.typeName;
+      this.editFunction = new FunctionModel();
+      this.editFunction.typeName = object.typeName;
+      this.editComparator = new ComparatorModel();
+      this.editComparator.typeName = object.typeName;
+    }
     this.modalService.getModal(param).open(false);
   }
 

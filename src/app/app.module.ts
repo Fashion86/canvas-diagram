@@ -22,6 +22,8 @@ import { ModelService } from './core/services/model.service';
 import { AnswerService } from './core/services/answer.service';
 import { QuestionService } from './core/services/question.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {AccordionModule} from 'primeng/accordion';
+import {PaginatorModule} from 'primeng/paginator';
 
 
 import { AppComponent } from './app.component';
@@ -33,7 +35,6 @@ import { ChannelComponent } from './channel/channel.component';
 import { ObjectComponent } from './object/object.component';
 import { AttributeComponent } from './object/attribute/attribute.component';
 
-import {AccordionModule} from 'primeng/accordion';
 import { FunctionComponent } from './object/function/function.component';
 import { ComparatorComponent } from './object/comparator/comparator.component';
 // import {TreeTableModule} from 'primeng/treetable';
@@ -63,7 +64,8 @@ import { ComparatorComponent } from './object/comparator/comparator.component';
     HttpClientModule,
     NgxSmartModalModule.forRoot(),
     DataTablesModule,
-    AccordionModule
+    AccordionModule,
+    PaginatorModule
   ],
   // exports: [
   //   MatCardModule,

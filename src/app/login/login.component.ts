@@ -50,13 +50,13 @@ export class LoginComponent {
   }
 
   tryLogin(value){
-    // this.authService.doLogin(value)
-    // .then(res => {
+    this.authService.doLogin(value)
+    .then(res => {
     localStorage.setItem('user', JSON.stringify({name: this.loginForm.get('email').value}));
-      this.router.navigate(['/user']);
-    // }, err => {
-    //   console.log(err);
-    //   this.errorMessage = err.message;
-    // })
+      // this.router.navigate(['/user']);
+    }, err => {
+      console.log(err);
+      this.errorMessage = err.message;
+    })
   }
 }

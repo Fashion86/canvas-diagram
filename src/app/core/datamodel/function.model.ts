@@ -4,5 +4,5 @@ export class FunctionModel {
   functionName: string;
   code: string;
   iconUrl: string;
-  icon: string;
+  codeUrl: string;
 }
