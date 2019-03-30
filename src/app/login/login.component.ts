@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { AuthService } from '../core/auth.service'
 import { Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: 'login.component.html',
   styleUrls: ['login.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
   loginForm: FormGroup;
   errorMessage: string = '';
@@ -21,6 +21,11 @@ export class LoginComponent {
     this.createForm();
   }
 
+  ngOnInit() {
+    this.loginForm.valueChanges.subscribe(val => {
+      this.errorMessage = '';
+    });
+  }
   createForm() {
     this.loginForm = this.fb.group({
       email: ['', Validators.required ],
@@ -45,6 +50,7 @@ export class LoginComponent {
   tryGoogleLogin(){
     this.authService.doGoogleLogin()
     .then(res => {
+      localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
       this.router.navigate(['/user']);
     })
   }
@@ -52,8 +58,8 @@ export class LoginComponent {
   tryLogin(value){
     this.authService.doLogin(value)
     .then(res => {
-    localStorage.setItem('user', JSON.stringify({name: this.loginForm.get('email').value}));
-      // this.router.navigate(['/user']);
+    localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
+      this.router.navigate(['/user']);
     }, err => {
       console.log(err);
       this.errorMessage = err.message;
