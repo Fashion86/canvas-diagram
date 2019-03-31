@@ -11,20 +11,19 @@ import { NgxSmartModalModule } from 'ngx-smart-modal';
 import { DataTablesModule } from 'angular-datatables';
 
 import { LoginComponent } from './login/login.component';
-import { UserComponent } from './user/user.component';
+import { ConversationComponent } from './conversation/conversation.component';
 import { RegisterComponent } from './register/register.component';
-import { UserResolver } from './user/user.resolver';
+import { ConversationResolver } from './conversation/conversation.resolver';
 import { AuthGuard } from './core/auth.guard';
 import { AuthService } from './core/auth.service';
 import { UserService } from './core/services/user.service';
 import { ChannelService } from './core/services/channel.service';
 import { ModelService } from './core/services/model.service';
-import { AnswerService } from './core/services/answer.service';
-import { QuestionService } from './core/services/question.service';
+import { NodeService } from './core/services/node.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {AccordionModule} from 'primeng/accordion';
 import {PaginatorModule} from 'primeng/paginator';
-
+//import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 
@@ -43,7 +42,7 @@ import { ComparatorComponent } from './object/comparator/comparator.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    UserComponent,
+    ConversationComponent,
     RegisterComponent,
     HeaderComponent,
     ChannelComponent,
@@ -71,8 +70,8 @@ import { ComparatorComponent } from './object/comparator/comparator.component';
   //   MatCardModule,
   //   BrowserAnimationsModule
   // ],
-  providers: [AuthService, UserService, UserResolver, AuthGuard, ChannelService,
-    ModelService, AnswerService, QuestionService],
+  providers: [AuthService, UserService, ConversationResolver, AuthGuard, ChannelService,
+    ModelService, NodeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

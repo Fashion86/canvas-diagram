@@ -35,11 +35,12 @@
     "ngx-smart-modal": "^7.1.1",
     "node-sass": "^4.5.3",
     "npm": "^6.4.1",
-    "primeng": "^7.0.0",
     "primeicons": "^1.0.0",
+    "primeng": "^7.0.0",
     "rxjs": "^6.4.0",
     "rxjs-compat": "6.3.3",
     "tslib": "^1.9.0",
+    "vis": "^4.21.0",
     "zone.js": "^0.8.29"
   },
   "devDependencies": {

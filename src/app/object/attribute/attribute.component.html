@@ -16,10 +16,10 @@
       <tbody>
       <tr *ngFor="let attribute of attributes; let i = index">
         <td>
-          {{attribute.name}}
+          {{attribute.attributeName}}
         </td>
         <td>
-          {{attribute.value}}
+          {{attribute.attributeType}}
         </td>
         <td>
           <a (click)="editData(attribute)">
@@ -53,13 +53,13 @@
       <div class="form-group">
         <label class="control-label col-sm-3">Name</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editAttribute.name" placeholder="Name" name="name" required>
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeName" placeholder="Name" name="name" required>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label col-sm-3">Value</label>
         <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editAttribute.value" placeholder="Value" name="value" required>
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeType" placeholder="Type" name="type" required>
         </div>
       </div>
       <div class="form-group">

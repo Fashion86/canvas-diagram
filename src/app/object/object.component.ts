@@ -6,12 +6,17 @@ import {Router} from '@angular/router';
 import {AttributeModel} from '../core/datamodel/attribute.model';
 import {FunctionModel} from '../core/datamodel/function.model';
 import {ComparatorModel} from '../core/datamodel/comparator.model';
+//import {FileUploader, FileSelectDirective} from 'ng2-file-upload';
+
+
 
 @Component({
   selector: 'app-object',
   templateUrl: './object.component.html',
   styleUrls: ['./object.component.scss']
 })
+
+
 export class ObjectComponent implements OnInit {
 
   objects: any[] = [];
@@ -26,11 +31,16 @@ export class ObjectComponent implements OnInit {
   editComparator: ComparatorModel;
   deleteComparator: ComparatorModel;
   totalRecords: number;
+  //fileUploader:FileUploader ;
   constructor(private objectAPI: ModelService,
               private router: Router,
               public modalService: NgxSmartModalService) { }
-
+  
+  
   ngOnInit() {
+	var URL = 'https://evening-anchorage-3159.herokuapp.com/api/';
+  
+	//this.fileUploader = new FileUploader({url: URL});
     this.editObject = new ObjectModel();
     this.editAttribute = new AttributeModel();
     this.editFunction = new FunctionModel();
@@ -68,16 +78,19 @@ export class ObjectComponent implements OnInit {
   }
 
   onCreate(param, object) {
-    if (param === 'object') {
-      this.editObject = new ObjectModel();
-    } else {
-      this.editAttribute = new AttributeModel();
-      this.editAttribute.typeName = object.typeName;
-      this.editFunction = new FunctionModel();
-      this.editFunction.typeName = object.typeName;
-      this.editComparator = new ComparatorModel();
-      this.editComparator.typeName = object.typeName;
-    }
+	if ( param === 'object' )
+		this.editObject = new ObjectModel();
+    	else if ( param == 'attribute') {
+		this.editAttribute = new AttributeModel();
+		this.editAttribute.typeName = object.typeName;
+		this.editAttribute.attributeName ='test';
+	} else if ( param == 'function') {
+		this.editFunction = new FunctionModel();
+		this.editFunction.typeName = object.typeName;
+	} else if ( param == 'comparator') { 
+		this.editComparator = new ComparatorModel();
+		this.editComparator.typeName = object.typeName;
+	}
     this.modalService.getModal(param).open(false);
   }
 
@@ -106,6 +119,7 @@ export class ObjectComponent implements OnInit {
   }
 
   onSubmit(param) {
+    console.log('param: ', param);
     this.modalService.getModal(param).close();
     if (param == 'object') {
       this.objectAPI.createObject(this.editObject).subscribe(
@@ -118,6 +132,7 @@ export class ObjectComponent implements OnInit {
         }
       );
     } else if (param == 'attribute') {
+      console.log( JSON.stringify(this.editAttribute));
       this.objectAPI.createAttribute(this.editAttribute).subscribe(
         res => {
           // this.getObjectList();

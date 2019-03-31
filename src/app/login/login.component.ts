@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../core/auth.service'
 import { Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: 'login.component.html',
   styleUrls: ['login.scss']
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent {
 
   loginForm: FormGroup;
   errorMessage: string = '';
@@ -21,11 +21,6 @@ export class LoginComponent implements OnInit{
     this.createForm();
   }
 
-  ngOnInit() {
-    this.loginForm.valueChanges.subscribe(val => {
-      this.errorMessage = '';
-    });
-  }
   createForm() {
     this.loginForm = this.fb.group({
       email: ['', Validators.required ],
@@ -36,33 +31,32 @@ export class LoginComponent implements OnInit{
   tryFacebookLogin(){
     this.authService.doFacebookLogin()
     .then(res => {
-      this.router.navigate(['/user']);
+      this.router.navigate(['/conversation']);
     })
   }
 
   tryTwitterLogin(){
     this.authService.doTwitterLogin()
     .then(res => {
-      this.router.navigate(['/user']);
+      this.router.navigate(['/conversation']);
     })
   }
 
   tryGoogleLogin(){
     this.authService.doGoogleLogin()
     .then(res => {
-      localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
-      this.router.navigate(['/user']);
+      this.router.navigate(['/conversation']);
     })
   }
 
   tryLogin(value){
-    this.authService.doLogin(value)
-    .then(res => {
-    localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
-      this.router.navigate(['/user']);
-    }, err => {
-      console.log(err);
-      this.errorMessage = err.message;
-    })
+    // this.authService.doLogin(value)
+    // .then(res => {
+    localStorage.setItem('user', JSON.stringify({name: this.loginForm.get('email').value}));
+      this.router.navigate(['/conversation']);
+    // }, err => {
+    //   console.log(err);
+    //   this.errorMessage = err.message;
+    // })
   }
 }

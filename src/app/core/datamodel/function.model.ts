@@ -5,4 +5,5 @@ export class FunctionModel {
   code: string;
   iconUrl: string;
   codeUrl: string;
+  returnType: string;
 }

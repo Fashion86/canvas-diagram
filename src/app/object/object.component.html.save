@@ -71,7 +71,7 @@
                                 <thead>
                                 <tr>
                                     <th>Function Name</th>
-									<th>Return Type</th>									
+				    <th>Return Type</th>									
                                     <th>Code</th>
                                     <th>Code Url</th>
                                     <th>Icon Url</th>
