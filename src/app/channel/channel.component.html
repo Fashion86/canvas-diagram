@@ -1,144 +1,340 @@
 <app-header></app-header>
 <div class="container">
   <h3>Channels</h3>
-  <div class="add-data">
-    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate()">Add New Channel</button>
-    <div *ngIf="channels?.length>0" class="searchbar input-group col-sm-4">
-      <input class="form-control" type="text" placeholder="Filter by Channel Type..." (change)="searchChannel($event)" [(ngModel)]="searchstr">
-      <span class="input-group-addon"><i class="fa fa-search"></i></span>
-    </div>
+  <!--   <div ng-controller="MyCtrl">
+    <input type="file" ngf-select="onFileSelect($files)" multiple>
+     <input ng2FileSelect type="file" accept=".json" [uploader]="fileUploader"/>
   </div>
-  <div>
+   -->
+
+  <!-- <div ng2FileDrop
+       [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+       (fileOver)="fileOverBase($event)"
+       [uploader]="fileUploader"
+       class="well my-drop-zone">
+      Base drop zone
+  </div> -->
+  <div class="add-data">
+    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object',this)">Add New Channel</button>
+    <!--<div *ngIf="channels?.length>0" class="searchbar input-group col-sm-4">-->
+    <!--<input class="form-control" type="text" placeholder="Filter by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">-->
+    <!--<span class="input-group-addon"><i class="fa fa-search"></i></span>-->
+    <!--</div>-->
+  </div>
+  <div class="table-group">
     <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
-      <p-accordionTab header="Godfather I">
-        <div class="table-group table-responsive table-bordered">
-          <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-              <th>Type</th>
-              <th>Connection</th>
-              <th></th>
-              <th></th>
-              <!--<th colspan="">Options</th>-->
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let channel of channels; let i = index">
-              <td>
-                {{channel.type}}
-              </td>
-              <td>
-                {{channel.connection}}
-              </td>
-              <td>
-                <a (click)="editData(channel)">
-                  <i class="fa fa-pencil"></i>
-                </a>
-              </td>
-              <td>
-                <a style="color: red" (click)="deleteData(channel)">
-                  <i class="fa fa-trash-o"></i>
-                </a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+      <div  *ngFor="let channel of pagechannels; let k = index">
 
-          <div class="pagination-wrapper">
-            <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
-          </div>
-        </div>
-      </p-accordionTab>
-      <p-accordionTab header="Godfather II">
-        <div class="table-group table-responsive table-bordered">
-          <table class="table table-hover table-striped">
-            <thead>
-            <tr>
-              <th>Type</th>
-              <th>Connection</th>
-              <th></th>
-              <th></th>
-              <!--<th colspan="">Options</th>-->
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let channel of channels; let i = index">
-              <td>
-                {{channel.type}}
-              </td>
-              <td>
-                {{channel.connection}}
-              </td>
-              <td>
-                <a (click)="editData(channel)">
-                  <i class="fa fa-pencil"></i>
-                </a>
-              </td>
-              <td>
-                <a style="color: red" (click)="deleteData(channel)">
-                  <i class="fa fa-trash-o"></i>
-                </a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+        <p-accordionTab header="{{channel.typeName}}">
+          <p-accordion [multiple]="true">
+            <p-accordionTab header="Attributes">
+              <p-header>
+                <span float="left">Attributes</span><span float="right" class="add-item" (click)="onCreate('attribute', channel)"><i class="fa fa-plus"></i></span>
+              </p-header>
+              <div class="table-group table-responsive table-bordered">
+                <table class="table table-hover table-striped">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let attr of channel.attributes; let i = index">
+                    <td>
+                      {{attr.attributeName}}
+                    </td>
+                    <td>
+                      {{attr.attributeType}}
+                    </td>
+                    <td class="control-optios">
+                      <a (click)="editData(attr, i )">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <a style="color: red" (click)="deleteData(attr, i)">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </td>
 
-          <div class="pagination-wrapper">
-            <!--<p-paginator [rows]="20" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>-->
-          </div>
-        </div>
-      </p-accordionTab>
-      <p-accordionTab header="Godfather III">
-        After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
-      </p-accordionTab>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </p-accordionTab>
+            <p-accordionTab header="Functions">
+              <p-header>
+                <span float="left">Functions</span><span float="right" class="add-item" (click)="onCreate('function', channel)"><i class="fa fa-plus"></i></span>
+
+              </p-header>
+              <div class="table-group table-responsive table-bordered">
+                <table class="table table-hover table-striped">
+                  <thead>
+                  <tr>
+                    <th>Function Name</th>
+                    <th>Return Type</th>
+                    <th>Code</th>
+                    <th>Code Url</th>
+                    <th>Icon Url</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let func of channel.functions; let i = index">
+                    <td>
+                      {{func.functionName}}
+                    </td>
+                    <td>
+                      {{func.returnType}}
+                    </td>
+                    <td class='textbox'>
+                      {{func.code}}
+                    </td>
+                    <td>
+                      {{func.codeUrl}}
+                    </td>
+                    <td>
+                      {{func.iconUrl}}
+                    </td>
+                    <td class="control-optios">
+                      <a (click)="editData(func)">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <a style="color: red" (click)="deleteData(func, i)">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </p-accordionTab>
+            <p-accordionTab header="Comparators">
+              <p-header>
+                <span float="left">Comparators</span><span float="right" class="add-item" (click)="onCreate('comparator', channel)"><i class="fa fa-plus"></i></span>
+              </p-header>
+              <div class="table-group table-responsive table-bordered">
+                <table class="table table-hover table-striped">
+                  <thead>
+                  <tr>
+                    <th>Comparator Name</th>
+                    <th>Code</th>
+                    <th>Code Url</th>
+                    <th>Icon Url</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let comp of channel.comparators; let i = index">
+                    <td>
+                      {{comp.comparatorName}}
+                    </td>
+                    <td>
+                      {{comp.code}}
+                    </td>
+                    <td>
+                      {{comp.codeUrl}}
+                    </td>
+                    <td>
+                      {{comp.iconUrl}}
+                    </td>
+                    <td class="control-optios">
+                      <a (click)="editData(func)">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <a style="color: red" (click)="deleteData(func, i)">
+                        <i class="fa fa-trash-o"></i>
+                      </a>
+                    </td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </p-accordionTab>
+          </p-accordion>
+        </p-accordionTab>
+      </div>
     </p-accordion>
+    <div class="pagination-wrapper">
+      <p-paginator [rows]="objectpageSize" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="objectpaginate($event)"></p-paginator>
+    </div>
   </div>
 </div>
 
-<!-- edit dialog-->
-<ngx-smart-modal #editModal identifier="editModal" [dismissable]="false">
+<!-- edit channel dialog-->
+<ngx-smart-modal #channel identifier="channel" [dismissable]="false">
   <div class="dg-heaser">
     <h3>
-      <span *ngIf="editChannel.id">Edit Channel</span>
-      <span *ngIf="!editChannel.id">Create Channel</span>
+      <span *ngIf="editObject.id">Edit Object</span>
+      <span *ngIf="!editObject.id">Create Object</span>
     </h3>
   </div>
   <div class="dg-body">
-    <form class="form-horizontal" #form="ngForm" (ngSubmit)="onSubmit()">
+    <form class="form-horizontal" #form1="ngForm" (ngSubmit)="onSubmit('channel')">
       <div class="form-group">
-        <label class="control-label col-sm-3">Type</label>
+        <label class="control-label col-sm-3">Type Name</label>
         <div class="col-sm-9 right-div">
-          <select class="form-control" [(ngModel)]="editChannel.type"
-                  (change)="onSelectType($event)" name="type">
-            <!--<option [ngValue]="null">-&#45;&#45;</option>-->
-            <option *ngFor="let type of types"  value={{type}}>
-              <span>{{type}}</span>
-            </option>
-          </select>
-          <!--<input type="text" class="form-control" [(ngModel)]="editChannel.type" placeholder="Type" name="type" required>-->
+          <input type="text" class="form-control" [(ngModel)]="editObject.typeName" placeholder="Name" name="name" required>
         </div>
       </div>
-      <div class="form-group">
-        <label class="control-label col-sm-3">Connection</label>
-        <div class="col-sm-9 right-div">
-          <input type="text" class="form-control" [(ngModel)]="editChannel.connection" placeholder="Connection" name="connection" required>
-        </div>
-      </div>
+      <!--<div class="form-group">-->
+      <!--<label class="control-label col-sm-3">Value</label>-->
+      <!--<div class="col-sm-9 right-div">-->
+      <!--<input type="text" class="form-control" [(ngModel)]="editObject.value" placeholder="Value" name="value" required>-->
+      <!--</div>-->
+      <!--</div>-->
       <div class="form-group">
         <div class="control-btn">
-          <button *ngIf="editChannel.id;" type="submit" class="btn btn-primary btn-md btn-right"
-                  [disabled]="form.form.invalid">Update
+          <button *ngIf="editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form1.form.invalid">Update
           </button>
-          <button *ngIf="!editChannel.id;" type="submit" class="btn btn-primary btn-md btn-right"
-                  [disabled]="form.form.invalid">Create
+          <button *ngIf="!editObject.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form1.invalid">Create
           </button>
-          <button type="button" class="btn btn-default btn-md btn-right" (click)="editModal.close()">Cancel</button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="channel.close()">Cancel</button>
         </div>
       </div>
     </form>
   </div>
 </ngx-smart-modal>
 
+<!-- edit attribute dialog-->
+<ngx-smart-modal #attribute identifier="attribute" [dismissable]="false">
+  <div class="dg-heaser">
+    <h3>
+      <span>Create Attribute</span>
+    </h3>
+  </div>
+  <div class="dg-body">
+    <form class="form-horizontal" #form2="ngForm" (ngSubmit)="onSubmit('attribute')">
+      <div class="form-group">
+        <label class="control-label col-sm-3">Name</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeName" placeholder="Name" name="name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Type</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editAttribute.attributeType" placeholder="Type" name="type" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="control-btn">
+          <button *ngIf="editAttribute.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form2.form.invalid">Update
+          </button>
+          <button *ngIf="!editAttribute.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form2.form.invalid">Create
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="attribute.close()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ngx-smart-modal>
+
+<!-- edit function dialog-->
+<ngx-smart-modal #function identifier="function" [dismissable]="false"  [customClass]="">
+  <div class="dg-heaser" width="800">
+    <h3>
+      <span *ngIf="editFunction.id">Edit Function</span>
+      <span *ngIf="!editFunction.id">Create Function</span>
+    </h3>
+  </div>
+  <div class="dg-body" width="800">
+    <form class="form-horizontal" #form3="ngForm" (ngSubmit)="onSubmit('function')">
+      <div class="form-group">
+        <label class="control-label col-sm-3">Function Name</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editFunction.functionName" placeholder="Name" name="name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Icon Url</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editFunction.iconUrl" placeholder="Icon Url" name="iconUrl">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Code</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editFunction.code" placeholder="Code" name="code">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Code Url</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editFunction.codeUrl" placeholder="Code Url" name="codeUrl">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="control-btn">
+          <button *ngIf="editFunction.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form3.form.invalid">Update
+          </button>
+          <button *ngIf="!editFunction.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form3.form.invalid">Create
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="function.close()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ngx-smart-modal>
+
+<!-- edit comparator dialog-->
+<ngx-smart-modal #comparator identifier="comparator" [dismissable]="false">
+  <div class="dg-heaser">
+    <h3>
+      <span *ngIf="editComparator.id">Edit Comparator</span>
+      <span *ngIf="!editComparator.id">Create Comparator</span>
+    </h3>
+  </div>
+  <div class="dg-body">
+    <form class="form-horizontal" #form4="ngForm" (ngSubmit)="onSubmit('comparator')">
+      <div class="form-group">
+        <label class="control-label col-sm-3">Comparator Name</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editComparator.comparatorName" placeholder="Name" name="name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Icon Url</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editComparator.iconUrl" placeholder="Icon Url" name="value">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Code</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editComparator.code" placeholder="Code" name="code">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Code Url</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editComparator.codeUrl" placeholder="Code Url" name="codeUrl">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-sm-3">Return Type</label>
+        <div class="col-sm-9 right-div">
+          <input type="text" class="form-control" [(ngModel)]="editComparator.returnType" placeholder="Return Type" name="returnType">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="control-btn">
+          <button *ngIf="editComparator.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form4.form.invalid">Update
+          </button>
+          <button *ngIf="!editComparator.id;" type="submit" class="btn btn-primary btn-md btn-right"
+                  [disabled]="form4.form.invalid">Create
+          </button>
+          <button type="button" class="btn btn-default btn-md btn-right" (click)="comparator.close()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ngx-smart-modal>
 <!-- delete dialog-->
 <ngx-smart-modal #deleteModal identifier="deleteModal" [dismissable]="false">
   <div class="dg-heaser">
@@ -147,7 +343,7 @@
     </h3>
   </div>
   <div class="dg-body">
-    <h4><i class="fa fa-warning"></i> Are you sure delete this Channel?</h4>
+    <h4><i class="fa fa-warning"></i> Are you sure delete this Object?</h4>
   </div>
   <div class="form-group">
     <div class="control-btn">

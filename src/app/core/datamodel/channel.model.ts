@@ -1,5 +1,7 @@
 export class ChannelModel {
   id: number;
-  type: string;
-  connection: string;
+  channelName: string;
+  channelType: string;
+  URL: string;
+  authentication: string;
 }

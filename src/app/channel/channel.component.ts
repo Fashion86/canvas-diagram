@@ -3,128 +3,190 @@ import {FirebaseUserModel} from '../core/datamodel/user.model';
 import {ChannelService} from '../core/services/channel.service';
 import {ChannelModel} from '../core/datamodel/channel.model';
 import { NgxSmartModalService } from 'ngx-smart-modal';
+import {ModelService} from '../core/services/model.service';
+import {Router} from '@angular/router';
+import {SchemaService} from '../core/services/schema.service';
+import {ComparatorModel} from '../core/datamodel/comparator.model';
+import {ObjectModel} from '../core/datamodel/object.model';
+import {FunctionModel} from '../core/datamodel/function.model';
+import {AttributeModel} from '../core/datamodel/attribute.model';
 
 @Component({
   selector: 'app-channel',
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss']
 })
-export class ChannelComponent implements OnInit, AfterViewInit {
+export class ChannelComponent implements OnInit {
 
+  channels: any[] = [];
+  pagechannels: any[] = [];
+  objectpageSize = 20;
   searchstr = '';
-  channels: ChannelModel[] = [];
-  editChannel: ChannelModel;
-  deleteChannel: ChannelModel;
-  types = ['Facebook', 'Webclient', 'Api'];
-  tableOptions = {};
+  editObject: ChannelModel;
+  deleteObject: ChannelModel;
+  editAttribute: AttributeModel;
+  deleteAttribute: AttributeModel;
+  editFunction: FunctionModel;
+  deleteFunction: FunctionModel;
+  editComparator: ComparatorModel;
+  deleteComparator: ComparatorModel;
+  totalRecords: number;
   constructor(private channelAPI: ChannelService,
+              private router: Router,
               public modalService: NgxSmartModalService) { }
 
+
   ngOnInit() {
-    this.editChannel = new ChannelModel();
-    this.deleteChannel = null;
-    this.tableOptions = {
-      paging: false,
-      searching: false,
-      ordering:  false
-    };
+    this.editObject = new ChannelModel();
+    this.editAttribute = new AttributeModel();
+    this.editFunction = new FunctionModel();
+    this.editComparator = new ComparatorModel();
+    this.deleteObject = null;
     this.getChannelList();
   }
-  ngAfterViewInit(): void{
-    var table = $('#channeltable').DataTable( {
-      "columns": [
-        {
-          "className":      'details-control',
-          "orderable":      true,
-          "data":           null,
-          "defaultContent": ''
-        },
-        { "data": "type" },
-        { "data": "connection" }
-      ],
-      "order": [[1, 'asc']]
-    } );
-  }
-  getChannelList() {
 
+  objectpaginate(event) {
+    this.pagechannels = [];
+    this.pagechannels = this.channels.slice(event.first, event.first + event.rows);
+  }
+
+  getChannelList() {
     this.channelAPI.getChannelList().subscribe(
-      res => {
-        this.channels = JSON.parse(res)['channels'];
-        // if (res['success']) {
-        //   this.channels = res['data'];
-        // } else {
-        //   alert('Error to get channel data');
-        // }
+      res => {console.log(res)
+        // this.channels = res['Items'];
+        // this.totalRecords = this.channels.length;
+        // this.pagechannels = [];
+        // this.pagechannels = this.channels.slice(0, this.objectpageSize);
       },
       error => {
         console.log(error);
-        alert('Unable to fetch channel data');
+        alert('Unable to fetch object data');
       }
-      );
+    );
 
   }
 
-  searchChannel(event) {
-      console.log(this.searchstr)
+  onCreate(param, object) {
+    if ( param === 'object' ) {
+      this.editObject = new ChannelModel();
+    } else if ( param == 'attribute') {
+      this.editAttribute = new AttributeModel();
+      this.editAttribute.typeName = object.typeName;
+      this.editAttribute.attributeName ='test';
+    } else if ( param == 'function') {
+      this.editFunction = new FunctionModel();
+      this.editFunction.typeName = object.typeName;
+    } else if ( param == 'comparator') {
+      this.editComparator = new ComparatorModel();
+      this.editComparator.typeName = object.typeName;
+    }
+    this.modalService.getModal(param).open(false);
   }
-  onCreate() {
-    this.editChannel = new ChannelModel();
+
+  editData(object) {
+    this.editObject = Object.assign({}, object);
     this.modalService.getModal('editModal').open(false);
   }
 
-  editData(channel) {
-    this.editChannel = Object.assign({}, channel);
-    this.modalService.getModal('editModal').open(false);
-  }
-
-  deleteData(channel) {
-    this.deleteChannel = channel;
+  deleteData(object, index) {
+    this.deleteObject = object;
     this.modalService.getModal('deleteModal').open(false);
   }
 
   onDelete() {
     this.modalService.getModal('deleteModal').close();
-    this.channels = this.channels.filter(c => c.id != this.deleteChannel.id);
-    // this.channelAPI.deleteChannel(this.deleteChannel.id).subscribe(
+    this.channels = this.channels.filter(c => c.id != this.deleteObject.id);
+    // this.channelAPI.deleteObject(this.deleteObject.id).subscribe(
     //   res => {
     //     // this.channels = JSON.parse(res)['channels'];
     //   },
     //   error => {
     //     console.log(error);
-    //     alert('Unable to delete channel data');
+    //     alert('Unable to delete object data');
     //   }
     // );
   }
 
-  onSubmit() {
-    this.modalService.getModal('editModal').close();
-    if (!this.editChannel.id) {
-      const maxID = Math.max.apply(Math, this.channels.map(function(o) { return o.id; }));
-      this.editChannel.id = maxID + 1;
-      this.channels.push(this.editChannel);
-      // this.channelAPI.createChannel(this.editChannel).subscribe(
+  onSubmit(param) {
+    console.log('param: ', param);
+    this.modalService.getModal(param).close();
+    if (param == 'object') {
+      // this.channelAPI.createObject(this.editObject).subscribe(
       //   res => {
+      //     this.getObjectList();
       //   },
       //   error => {
       //     console.log(error);
+      //     alert('Unable to fetch object data');
       //   }
       // );
-    } else {
-      const edited = this.channels.find( p => p.id === this.editChannel.id);
-      Object.assign(edited, this.editChannel);
-      // this.channelAPI.updateChannel(this.editChannel).subscribe(
+    } else if (param == 'attribute') {
+
+      // this.channelAPI.createAttribute(this.editAttribute).subscribe(
       //   res => {
+      //     // this.getObjectList();
       //   },
       //   error => {
       //     console.log(error);
+      //     alert('Unable to fetch object data');
+      //   }
+      // );
+    } else if (param == 'function') {
+      // this.channelAPI.createFunction(this.editFunction).subscribe(
+      //   res => {
+      //     // this.getObjectList();
+      //   },
+      //   error => {
+      //     console.log(error);
+      //     alert('Unable to fetch object data');
+      //   }
+      // );
+    } else if (param == 'comparator') {
+      // this.channelAPI.createComparator(this.editComparator).subscribe(
+      //   res => {
+      //     // this.getObjectList();
+      //   },
+      //   error => {
+      //     console.log(error);
+      //     alert('Unable to fetch object data');
       //   }
       // );
     }
   }
-  onTabOpen(event) {
-    console.log(event)
+
+  goAttributes(object) {
+    this.router.navigate(['/model', object.id, 'attributes']);
   }
-  onSelectType(event) {
-    console.log(this.editChannel.type)
+
+  onTabOpen(event) {
+    // this.channelAPI.getAttributesByObject(this.channels[event.index].typeName).subscribe(
+    //   res => {
+    //     this.channels[event.index]['attributes'] = res['Items'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to fetch attributes data');
+    //   }
+    // );
+    //
+    // this.channelAPI.getFunctionsByObject(this.channels[event.index].typeName).subscribe(
+    //   res => {
+    //     this.channels[event.index]['functions'] = res['Items'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to fetch functions data');
+    //   }
+    // );
+    //
+    // this.channelAPI.getComparatorsByObject(this.channels[event.index].typeName).subscribe(
+    //   res => {
+    //     this.channels[event.index]['comparators'] = res['Items'];
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('Unable to fetch comparators data');
+    //   }
+    // );
   }
 }

@@ -13,12 +13,12 @@ import { AttributeComponent } from './object/attribute/attribute.component';
 
 export const rootRouterConfig: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
-  { path: 'conversation', component: ConversationComponent},
-  { path: 'channel', component: ChannelComponent, data: { title: 'Channel'}},
-  { path: 'model', component: ObjectComponent, data: { title: 'Model'}},
-  { path: 'model/:id/attributes', component: AttributeComponent, data: { title: 'Model Attributes'}},
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent},
+  { path: 'conversation', component: ConversationComponent, canActivate: [AuthGuard]},
+  { path: 'channel', component: ChannelComponent, canActivate: [AuthGuard], data: { title: 'Channel'}},
+  { path: 'model', component: ObjectComponent, canActivate: [AuthGuard], data: { title: 'Model'}},
+  { path: 'model/:id/attributes', component: AttributeComponent, canActivate: [AuthGuard], data: { title: 'Model Attributes'}},
   { path: '**',  redirectTo: "/login", pathMatch: 'full'}
 ];
 

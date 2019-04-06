@@ -15,146 +15,146 @@
 	Base drop zone
 </div> -->
   <div class="add-data">
-    <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object',this)">Add New Object</button>
+      <button type="button" class="btn btn-primary btn-md btn-right" (click)="onCreate('object',this)">Add New Object</button>
     <!--<div *ngIf="objects?.length>0" class="searchbar input-group col-sm-4">-->
       <!--<input class="form-control" type="text" placeholder="Filter by Object Name ..." (keydown)="searchObject($event)" [(ngModel)]="searchstr">-->
       <!--<span class="input-group-addon"><i class="fa fa-search"></i></span>-->
     <!--</div>-->
   </div>
   <div class="table-group">
-    <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
-        <div  *ngFor="let object of pageobjects; let k = index">
-		
-            <p-accordionTab header="{{object.typeName}}">
-                <p-accordion [multiple]="true">
-                    <p-accordionTab header="Attributes">
-						<p-header>
-						      <span float="left">Attributes</span><span float="right" class="add-item" (click)="onCreate('attribute', object)"><i class="fa fa-plus"></i></span>
-						</p-header>
-                        <div class="table-group table-responsive table-bordered">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let attr of object.attributes; let i = index">
-                                    <td>
-                                        {{attr.attributeName}}
-                                    </td>
-                                    <td>
-                                        {{attr.attributeType}}
-                                    </td>
-                                    <td class="control-optios">
-                                        <a (click)="editData(attr, i )">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a style="color: red" (click)="deleteData(attr, i)">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
-                                    </td>
+      <p-accordion [multiple]="true" (onOpen)="onTabOpen($event)">
+          <div  *ngFor="let object of pageobjects; let k = index">
 
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </p-accordionTab>
-                    <p-accordionTab header="Functions">
-						<p-header>
-						      <span float="left">Functions</span><span float="right" class="add-item" (click)="onCreate('function', object)"><i class="fa fa-plus"></i></span>
-	
-						</p-header>					
-                        <div class="table-group table-responsive table-bordered">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Function Name</th>
-									<th>Return Type</th>									
-                                    <th>Code</th>
-                                    <th>Code Url</th>
-                                    <th>Icon Url</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let func of object.functions; let i = index">
-                                    <td>
-                                        {{func.functionName}}
-                                    </td>
-                                    <td>
-                                        {{func.returnType}}
-                                    </td>									
-                                    <td class='textbox'>
-                                        {{func.code}}
-                                    </td>
-                                    <td>
-                                        {{func.codeUrl}}
-                                    </td>
-                                    <td>
-                                        {{func.iconUrl}}
-                                    </td>
-                                    <td class="control-optios">
-                                        <a (click)="editData(func)">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a style="color: red" (click)="deleteData(func, i)">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </p-accordionTab>
-                    <p-accordionTab header="Comparators">
-						<p-header>
-						      <span float="left">Comparators</span><span float="right" class="add-item" (click)="onCreate('comparator', object)"><i class="fa fa-plus"></i></span>
-						</p-header>
-                        <div class="table-group table-responsive table-bordered">
-                            <table class="table table-hover table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Comparator Name</th>
-                                    <th>Code</th>
-                                    <th>Code Url</th>
-                                    <th>Icon Url</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr *ngFor="let comp of object.comparators; let i = index">
-                                    <td>
-                                        {{comp.comparatorName}}
-                                    </td>
-                                    <td>
-                                        {{comp.code}}
-                                    </td>
-                                    <td>
-                                        {{comp.codeUrl}}
-                                    </td>
-                                    <td>
-                                        {{comp.iconUrl}}
-                                    </td>
-                                    <td class="control-optios">
-                                        <a (click)="editData(func)">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a style="color: red" (click)="deleteData(func, i)">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
-                                    </td>
-									
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </p-accordionTab>
-                </p-accordion>
-            </p-accordionTab>
-        </div>
-    </p-accordion>
+              <p-accordionTab header="{{object.typeName}}">
+                  <p-accordion [multiple]="true">
+                      <p-accordionTab header="Attributes">
+                          <p-header>
+                              <span float="left">Attributes</span><span float="right" class="add-item" (click)="onCreate('attribute', object)"><i class="fa fa-plus"></i></span>
+                          </p-header>
+                          <div class="table-group table-responsive table-bordered">
+                              <table class="table table-hover table-striped">
+                                  <thead>
+                                  <tr>
+                                      <th>Name</th>
+                                      <th>Type</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr *ngFor="let attr of object.attributes; let i = index">
+                                      <td>
+                                          {{attr.attributeName}}
+                                      </td>
+                                      <td>
+                                          {{attr.attributeType}}
+                                      </td>
+                                      <td class="control-optios">
+                                          <a (click)="editData(attr, i )">
+                                              <i class="fa fa-pencil"></i>
+                                          </a>
+                                          <a style="color: red" (click)="deleteData(attr, i)">
+                                              <i class="fa fa-trash-o"></i>
+                                          </a>
+                                      </td>
+
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </p-accordionTab>
+                      <p-accordionTab header="Functions">
+                          <p-header>
+                              <span float="left">Functions</span><span float="right" class="add-item" (click)="onCreate('function', object)"><i class="fa fa-plus"></i></span>
+
+                          </p-header>
+                          <div class="table-group table-responsive table-bordered">
+                              <table class="table table-hover table-striped">
+                                  <thead>
+                                  <tr>
+                                      <th>Function Name</th>
+                                      <th>Return Type</th>
+                                      <th>Code</th>
+                                      <th>Code Url</th>
+                                      <th>Icon Url</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr *ngFor="let func of object.functions; let i = index">
+                                      <td>
+                                          {{func.functionName}}
+                                      </td>
+                                      <td>
+                                          {{func.returnType}}
+                                      </td>
+                                      <td class='textbox'>
+                                          {{func.code}}
+                                      </td>
+                                      <td>
+                                          {{func.codeUrl}}
+                                      </td>
+                                      <td>
+                                          {{func.iconUrl}}
+                                      </td>
+                                      <td class="control-optios">
+                                          <a (click)="editData(func)">
+                                              <i class="fa fa-pencil"></i>
+                                          </a>
+                                          <a style="color: red" (click)="deleteData(func, i)">
+                                              <i class="fa fa-trash-o"></i>
+                                          </a>
+                                      </td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </p-accordionTab>
+                      <p-accordionTab header="Comparators">
+                          <p-header>
+                              <span float="left">Comparators</span><span float="right" class="add-item" (click)="onCreate('comparator', object)"><i class="fa fa-plus"></i></span>
+                          </p-header>
+                          <div class="table-group table-responsive table-bordered">
+                              <table class="table table-hover table-striped">
+                                  <thead>
+                                  <tr>
+                                      <th>Comparator Name</th>
+                                      <th>Code</th>
+                                      <th>Code Url</th>
+                                      <th>Icon Url</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr *ngFor="let comp of object.comparators; let i = index">
+                                      <td>
+                                          {{comp.comparatorName}}
+                                      </td>
+                                      <td>
+                                          {{comp.code}}
+                                      </td>
+                                      <td>
+                                          {{comp.codeUrl}}
+                                      </td>
+                                      <td>
+                                          {{comp.iconUrl}}
+                                      </td>
+                                      <td class="control-optios">
+                                          <a (click)="editData(func)">
+                                              <i class="fa fa-pencil"></i>
+                                          </a>
+                                          <a style="color: red" (click)="deleteData(func, i)">
+                                              <i class="fa fa-trash-o"></i>
+                                          </a>
+                                      </td>
+
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </p-accordionTab>
+                  </p-accordion>
+              </p-accordionTab>
+          </div>
+      </p-accordion>
       <div class="pagination-wrapper">
-          <p-paginator [rows]="15" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+          <p-paginator [rows]="objectpageSize" [totalRecords]="totalRecords" pageLinkSize="3" (onPageChange)="objectpaginate($event)"></p-paginator>
       </div>
   </div>
 </div>

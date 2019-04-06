@@ -77,7 +77,7 @@ constructor(
   ) {
     this.channelAPI.getChannelList().subscribe(
       res => {
-        this.channels = JSON.parse(res)['channels'];
+        this.channels = [];
         // if (res['success']) {
         //   this.channels = res['data'];
         // } else {

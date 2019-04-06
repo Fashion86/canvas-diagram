@@ -6,6 +6,8 @@ import {Router} from '@angular/router';
 import {AttributeModel} from '../core/datamodel/attribute.model';
 import {FunctionModel} from '../core/datamodel/function.model';
 import {ComparatorModel} from '../core/datamodel/comparator.model';
+import {SchemaService} from '../core/services/schema.service';
+import {SchemaModel} from '../core/datamodel/schema.model';
 //import {FileUploader, FileSelectDirective} from 'ng2-file-upload';
 
 
@@ -21,6 +23,7 @@ export class ObjectComponent implements OnInit {
 
   objects: any[] = [];
   pageobjects: any[] = [];
+  objectpageSize = 20;
   searchstr = '';
   editObject: ObjectModel;
   deleteObject: ObjectModel;
@@ -34,7 +37,8 @@ export class ObjectComponent implements OnInit {
   //fileUploader:FileUploader ;
   constructor(private objectAPI: ModelService,
               private router: Router,
-              public modalService: NgxSmartModalService) { }
+              public modalService: NgxSmartModalService,
+              private schemaAPI: SchemaService) { }
   
   
   ngOnInit() {
@@ -48,22 +52,19 @@ export class ObjectComponent implements OnInit {
     this.deleteObject = null;
     this.getObjectList();
   }
-  paginate(event) {
+
+  objectpaginate(event) {
     this.pageobjects = [];
     this.pageobjects = this.objects.slice(event.first, event.first + event.rows);
   }
+
   getObjectList() {
     this.objectAPI.getObjectList().subscribe(
       res => {
         this.objects = res['Items'];
         this.totalRecords = this.objects.length;
         this.pageobjects = [];
-        this.pageobjects = this.objects.slice(0,15);
-        // if (res['success']) {
-        //   this.channels = res['data'];
-        // } else {
-        //   alert('Error to get channel data');
-        // }
+        this.pageobjects = this.objects.slice(0,this.objectpageSize);
       },
       error => {
         console.log(error);
@@ -78,9 +79,9 @@ export class ObjectComponent implements OnInit {
   }
 
   onCreate(param, object) {
-	if ( param === 'object' )
-		this.editObject = new ObjectModel();
-    	else if ( param == 'attribute') {
+	if ( param === 'object' ) {
+    this.editObject = new ObjectModel();
+  } else if ( param == 'attribute') {
 		this.editAttribute = new AttributeModel();
 		this.editAttribute.typeName = object.typeName;
 		this.editAttribute.attributeName ='test';
@@ -169,6 +170,17 @@ export class ObjectComponent implements OnInit {
     this.router.navigate(['/model', object.id, 'attributes']);
   }
 
+  onSchemaTabOpen(event) {
+    this.objectAPI.getAttributesByObject(this.objects[event.index].typeName).subscribe(
+      res => {
+        this.objects[event.index]['attributes'] = res['Items'];
+      },
+      error => {
+        console.log(error);
+        alert('Unable to fetch attributes data');
+      }
+    );
+  }
   onTabOpen(event) {
     this.objectAPI.getAttributesByObject(this.objects[event.index].typeName).subscribe(
       res => {

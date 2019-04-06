@@ -44,19 +44,20 @@ export class LoginComponent {
 
   tryGoogleLogin(){
     this.authService.doGoogleLogin()
-    .then(res => {
-      this.router.navigate(['/conversation']);
-    })
+      .then(res => {
+        localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
+        this.router.navigate(['/conversation']);
+      })
   }
 
   tryLogin(value){
-    // this.authService.doLogin(value)
-    // .then(res => {
-    localStorage.setItem('user', JSON.stringify({name: this.loginForm.get('email').value}));
-      this.router.navigate(['/conversation']);
-    // }, err => {
-    //   console.log(err);
-    //   this.errorMessage = err.message;
-    // })
+    this.authService.doLogin(value)
+      .then(res => {
+        localStorage.setItem('user', JSON.stringify({uid: res.user.uid, name: res.user.email}));
+        this.router.navigate(['/conversation']);
+      }, err => {
+        console.log(err);
+        this.errorMessage = err.message;
+      })
   }
 }
